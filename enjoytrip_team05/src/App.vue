@@ -1,14 +1,14 @@
 <script setup>
 
 import TheHeadingNavbar from "@/views/TheHeadingNavbar.vue";
-import TheMainView from "@/views/TheMainView.vue";
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div>
+  <nav>
     <TheHeadingNavbar />
-    <TheMainView />
-  </div>
+  </nav>
+  <RouterView />
 </template>
 
 <style scoped>
