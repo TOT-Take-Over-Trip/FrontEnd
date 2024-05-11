@@ -1,7 +1,10 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref } from 'vue'
+import {useRouter} from "vue-router";
+import axios from "axios";
 
-const state = reactive({
+//quill editor
+const state = ref({
     content: '<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>',
     _content: '',
     editorOption: {
@@ -43,11 +46,28 @@ const onEditorChange = ({ quill, html, text }) => {
     state._content = html
 }
 
+//글 등록, 등록 후 router를 통한 이동
+const title = ref('');
+const router = useRouter();
+
+const regist = () => {
+  const postDto = {
+    memberId:1, //TODO: 현재 로그인한 유저로 바꿔주기
+    title:title.value,
+    content:state.value.content
+  }
+  const url = "http://localhost:8080/tot/posts/new";
+  axios.post(url,postDto).then(() => {
+    console.log("게시글 등록 성공");
+    router.push('/'); //TODO: 이동 경로 설정
+  });
+}
+
 </script>
 
 <template>
   <div class="container">
-    <input class="title-input" placeholder="제목을 입력하세요" />
+    <input class="title-input" placeholder="제목을 입력하세요" v-model="title"/>
     <div class="editor-container">
       <quill-editor
           v-model:value="state.content"
@@ -61,7 +81,7 @@ const onEditorChange = ({ quill, html, text }) => {
     </div>
     <!-- 버튼 그룹 추가 -->
     <div class="button-group">
-      <button>글등록</button>
+      <button @click="regist">글등록</button>
       <button>임시저장</button>
       <button>취소</button>
     </div>
