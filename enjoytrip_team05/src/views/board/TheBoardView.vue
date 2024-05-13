@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 // Import Swiper styles
 import 'swiper/css';
 import VBoardCard from "@/components/board/BoardCard.vue";
-import SearchComponent from "@/components/board/SearchComponent.vue";
+import SearchComponent from "@/components/board/BoardSearchComponent.vue";
 
 const onSwiper = (swiper) => {
   console.log(swiper);

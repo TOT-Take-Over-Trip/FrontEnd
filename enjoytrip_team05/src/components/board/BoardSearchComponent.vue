@@ -18,7 +18,6 @@ import VButton from "@/components/VButton.vue";
       <img src="/src/assets/img/searchIcon.png" @click="" class="mx-3" style="height: 49%" alt="searchIcon" />
     </div>
     <VButton class="w-32 h-3/4">글쓰기</VButton>
-    <!--  필터 + 글쓰기  -->
   </div>
 </template>
 
