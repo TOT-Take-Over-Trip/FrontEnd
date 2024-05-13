@@ -16,6 +16,24 @@ const router = createRouter({
       name: "regist",
       component: ThePostRegist,
     },
+    {
+      // 게시판 router
+      path: "/board",
+      name: "board",
+      component: ThePostRegist,
+    },
+    {
+      // 코스 router
+      path: "/course",
+      name: "course",
+      component: TheMainView,
+    },
+    {
+      // 상점 router
+      path: "/shop",
+      name: "shop",
+      component: TheMainView,
+    },
   ]
 })
 
