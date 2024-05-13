@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import TheMainView from "@/views/TheMainView.vue";
 import ThePostRegist from "@/components/post/ThePostRegist.vue"
-import TheBoardView from "@/views/TheBoardView.vue";
+import TheBoardView from "@/views/board/TheBoardView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
