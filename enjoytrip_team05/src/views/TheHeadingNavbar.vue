@@ -9,9 +9,10 @@ const navigation = [
 ]
 </script>
 <template>
-  <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-evenly">
+  <Disclosure as="nav" class="border-b-2" v-slot="{ open }">
+    <!--  TODO: 이거 양 끝 간격 조절할 수 있음  -->
+    <div class="mx-56 px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between w-full ">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button-->
           <DisclosureButton class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
@@ -30,7 +31,7 @@ const navigation = [
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <RouterLink :to="{name: item.name}" v-for="item in navigation" :key="item.name" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.value }}</RouterLink>
+              <RouterLink :to="{name: item.name}" v-for="item in navigation" :key="item.name" :class="[item.current ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-xl font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.value }}</RouterLink>
             </div>
           </div>
         </div>
@@ -53,14 +54,15 @@ const navigation = [
             </div>
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
               <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <!--         TODO: RouterLink URL mapping 다시 해줘야 함           -->
                 <MenuItem v-slot="{ active }">
-                  <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">마이페이지</a>
+                  <RouterLink :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" :to="{name: 'main'}">마이페이지</RouterLink>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
+                  <RouterLink :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" :to="{name: 'main'}">Settings</RouterLink>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">로그아웃</a>
+                  <RouterLink :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" :to="{name: 'main'}">로그아웃</RouterLink>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -78,5 +80,7 @@ const navigation = [
 </template>
 
 <style scoped>
-
+.navbar-inner {
+  width: 100%;
+}
 </style>

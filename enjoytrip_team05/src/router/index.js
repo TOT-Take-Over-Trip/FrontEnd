@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import TheMainView from "@/views/TheMainView.vue";
 import ThePostRegist from "@/components/post/ThePostRegist.vue"
+import TheBoardView from "@/views/TheBoardView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +21,7 @@ const router = createRouter({
       // 게시판 router
       path: "/board",
       name: "board",
-      component: ThePostRegist,
+      component: TheBoardView,
     },
     {
       // 코스 router
