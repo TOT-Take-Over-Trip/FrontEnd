@@ -5,10 +5,10 @@ import axios from "axios";
 
 //quill editor
 const state = ref({
-    content: '<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>',
+    content: '<p></p>',
     _content: '',
     editorOption: {
-        placeholder: 'core',
+        placeholder: '내용을 입력하세요',
         modules: {
           toolbar: [
               [],[],[],[],[],[],[],
@@ -66,7 +66,7 @@ const regist = () => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container mx-auto">
     <input class="title-input" placeholder="제목을 입력하세요" v-model="title"/>
     <div class="editor-container">
       <quill-editor
@@ -89,9 +89,17 @@ const regist = () => {
 </template>
 
 <style scoped>
+
+.ql-container {
+  min-height: 600px;
+  height: auto;
+    border-left: none !important;
+    border-right: none !important;
+}
+
 .container {
   max-width: 80%;
-  margin: 0 auto;
+  /* margin: 0 auto; */
 }
 
 .title-input {
