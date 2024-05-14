@@ -25,8 +25,15 @@ const onSlideChange = () => {
     <div class="swiper-container flex items-center justify-center bg-gray-700 text-black">
       <swiper
           class="h-96"
-          :slides-per-view="7"
+          :slides-per-view="5"
           :space-between="100"
+          :breakpoints="{
+            640: { slidesPerView: 1, spaceBetween: 20 },
+            768: { slidesPerView: 2, spaceBetween: 30 },
+            1024: { slidesPerView: 3, spaceBetween: 40 },
+            1280: { slidesPerView: 4, spaceBetween: 50 },
+            1536: { slidesPerView: 5, spaceBetween: 100 }
+          }"
           @swiper="onSwiper"
           @slideChange="onSlideChange"
       >
