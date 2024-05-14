@@ -52,14 +52,14 @@ const router = useRouter();
 
 const regist = () => {
   const postDto = {
-    memberId:1, //TODO: 현재 로그인한 유저로 바꿔주기
+    memberId: 1, //TODO: 현재 로그인한 유저로 바꿔주기
     title:title.value,
     content:state.value.content
   }
   const url = "http://localhost:8080/tot/posts/new";
   axios.post(url,postDto).then(() => {
     console.log("게시글 등록 성공");
-    router.push('/'); //TODO: 이동 경로 설정
+    router.push({name: 'board'}); //TODO: 이동 경로 설정
   });
 }
 

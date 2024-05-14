@@ -2,6 +2,7 @@
 
 import TheHeadingNavbar from "@/views/TheHeadingNavbar.vue";
 import { RouterView } from 'vue-router'
+import TheFooterNavbar from "@/views/TheFooterNavbar.vue";
 </script>
 
 <template>
@@ -9,6 +10,7 @@ import { RouterView } from 'vue-router'
     <TheHeadingNavbar />
   </nav>
   <RouterView />
+  <TheFooterNavbar />
 </template>
 
 <style scoped>
