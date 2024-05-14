@@ -26,6 +26,8 @@ const imageUrl = computed(() => {
   // return "/src/assets/img/test/testImg.jpeg";
 });
 
+
+
 const truncatedContent = computed(() => {
   if (props.post.content.length > maxLength) {
     return props.post.content.slice(0, maxLength) + '...';
@@ -54,7 +56,7 @@ const contentClass = computed(() => {
       </div>
       <!--   제목 + 작성 날짜 묶음 END   -->
       <!--   본문 START  -->
-      <div>{{ truncatedContent }}</div>
+      <div v-html="truncatedContent"></div>
       <!--   본문 END  -->
     </div>
     <!--  img 그림  -->

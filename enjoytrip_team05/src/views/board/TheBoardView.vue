@@ -19,12 +19,8 @@ const URL = import.meta.env.VITE_BASE_URL;
 const fetchPosts = async () => {
   try {
     const response = await axios.get(`${URL}/posts`);
-    // TODO: response.data에서 response.data.posts로 변경
-    posts.value = response.data;
-    // posts.value = response.data.posts;
-    // TODO: response.data에서 topRankPosts로 변경해줘야 함
-    topRankPosts.value = response.data;
-    // topRankPosts.value = response.data.topRankPosts;
+    posts.value = response.data.posts;
+    topRankPosts.value = response.data.topRankPosts;
   } catch (error) {
     console.error("Error fetching posts:", error);
   }
@@ -38,7 +34,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="board-container">
+  <div>
     <!-- swiper 부분 (게시글 title, content 적고 넘기는 용도) START -->
     <div class="swiper-container flex items-center justify-center bg-gray-700 text-black">
       <swiper
@@ -73,9 +69,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.board-container {
-  //height: 2550px;
-}
+
 .swiper-container {
   height: 25%;
 }
