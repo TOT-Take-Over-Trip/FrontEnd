@@ -26,6 +26,8 @@ const fetchPosts = async () => {
   }
 };
 
+// TODO: 짝수 번째 마다 색 조금 다르게
+
 onMounted(() => {
   fetchPosts();
 })
@@ -36,7 +38,7 @@ onMounted(() => {
 <template>
   <div>
     <!-- swiper 부분 (게시글 title, content 적고 넘기는 용도) START -->
-    <div class="swiper-container flex items-center justify-center bg-gray-700 text-black">
+    <div class="swiper-container flex items-center bg-zinc-100 justify-center py-4 text-black">
       <swiper
           class="h-96"
           :slides-per-view="4"
@@ -50,7 +52,7 @@ onMounted(() => {
 
       >
         <swiper-slide v-for="(post) in topRankPosts" :key="post.id">
-          <VBoardCard :post="post" />
+          <VBoardCard class="rounded-xl" :post="post" style="border: 1px solid #c0c0c0" />
         </swiper-slide>
       </swiper>
     </div>
@@ -63,7 +65,7 @@ onMounted(() => {
     <!-- 검색창 END -->
 
     <!-- 전체 게시글 목록 (제목, 날짜, content:글자수로 자름) | 썸네일 START -->
-    <BoardContent v-for="(post) in posts" :post="post"/>
+    <BoardContent  v-for="(post, index) in posts" :key="post.postId" :post="post"/>
     <!-- 전체 게시글 목록 (제목, 날짜, content:글자수로 자름) | 썸네일 END -->
   </div>
 </template>
