@@ -1,5 +1,11 @@
 <script setup>
 import { RouterLink} from 'vue-router'
+
+
+// 데이터 전체 받아와서
+// 정렬을 할건데
+
+
 </script>
 
 <template>
