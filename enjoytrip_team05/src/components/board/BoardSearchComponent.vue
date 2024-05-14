@@ -16,7 +16,9 @@ import VButton from "@/components/VButton.vue";
       <input type="text" class="text-xl border-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요.">
       <!--  TODO: click 할 때 게시글 검색으로 넘어가야돼    -->
       <img src="/src/assets/img/searchIcon.png" @click="" class="mx-3" style="height: 49%" alt="searchIcon" />
-      <VButton class="w-32" style="height: 40%;">글쓰기</VButton>
+      <RouterLink :to="{name: 'regist'}">
+        <VButton class="w-32" style="height: 40%;">글쓰기</VButton>
+      </RouterLink>
     </div>
   </div>
 </template>
