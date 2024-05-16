@@ -3,6 +3,7 @@ import TheMainView from "@/views/TheMainView.vue";
 import ThePostRegist from "@/components/post/ThePostRegist.vue"
 import TheBoardView from "@/views/board/TheBoardView.vue";
 import BoardDetail from "@/components/board/BoardDetail.vue";
+import axios from "axios";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,12 @@ const router = createRouter({
       component: TheBoardView,
     },
     {
+      //게시판 상세정보 router
+      path: '/board/:postId',
+      name: 'boardDetail',
+      component: () => import("@/components/board/BoardDetail.vue"),
+    },
+    {
       // 코스 router
       path: "/course",
       name: "course",
@@ -36,12 +43,6 @@ const router = createRouter({
       name: "shop",
       component: TheMainView,
     },
-    {
-      //게시판 상세정보 router
-      path: '/board/:postId',
-      name: 'BoardDetail',
-      component: BoardDetail,
-    }
   ]
 })
 
