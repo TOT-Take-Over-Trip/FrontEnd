@@ -19,7 +19,7 @@ const arrayBufferToBase64 = (buffer) => {
 
 const imageUrl = computed(() => {
   if (props.post.thumbnail) {
-    console.log(props.post.thumbnail)
+    // console.log(props.post.thumbnail)
     return `data:image/jpeg;base64,${(props.post.thumbnail)}`;
   }
   return null;
