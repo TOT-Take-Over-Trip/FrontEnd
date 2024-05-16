@@ -107,7 +107,11 @@ onMounted(() => {
     <!-- 검색창 END -->
 
     <!-- 전체 게시글 목록 (제목, 날짜, content:글자수로 자름) | 썸네일 START -->
-    <BoardContent  v-for="(post, index) in displayPosts" :key="post.postId" :post="post" @click="goToBoardDetail(post.postId)"/>
+    <RouterLink v-for="(post, index) in displayPosts"
+                :key="post.postId"
+                :to="{ name: 'boardDetail', params: { postId: post.postId } }">
+      <BoardContent :post="post" />
+    </RouterLink>
     <!-- 전체 게시글 목록 (제목, 날짜, content:글자수로 자름) | 썸네일 END -->
   </div>
 </template>
