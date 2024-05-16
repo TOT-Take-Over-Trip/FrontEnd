@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios';
 import {onMounted, ref} from "vue";
+import {useRouter} from "vue-router";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
 
@@ -24,6 +25,12 @@ const fetchPosts = async () => {
   } catch (error) {
     console.error("Error fetching posts:", error);
   }
+};
+
+const router = useRouter();
+const goToBoardDetail = (postId) => {
+  // postId를 이용하여 BoardDetail.vue로 라우터 이동
+  router.push({ name: 'BoardDetail', params: { postId } });
 };
 
 // TODO: 짝수 번째 마다 색 조금 다르게
@@ -65,7 +72,7 @@ onMounted(() => {
     <!-- 검색창 END -->
 
     <!-- 전체 게시글 목록 (제목, 날짜, content:글자수로 자름) | 썸네일 START -->
-    <BoardContent  v-for="(post, index) in posts" :key="post.postId" :post="post"/>
+    <BoardContent  v-for="(post, index) in posts" :key="post.postId" :post="post" @click="goToBoardDetail(post.postId)"/>
     <!-- 전체 게시글 목록 (제목, 날짜, content:글자수로 자름) | 썸네일 END -->
   </div>
 </template>
