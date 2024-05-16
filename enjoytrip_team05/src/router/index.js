@@ -24,6 +24,12 @@ const router = createRouter({
       component: TheBoardView,
     },
     {
+      //게시판 상세정보 router
+      path: '/board/:postId',
+      name: 'boardDetail',
+      component: BoardDetail,
+    },
+    {
       // 코스 router
       path: "/course",
       name: "course",
