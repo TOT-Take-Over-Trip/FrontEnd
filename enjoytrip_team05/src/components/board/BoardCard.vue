@@ -8,8 +8,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="board-card flex flex-col justify-evenly mx-6 bg-gray-300 w-10/12">
-    <div class="title-container flex justify-center items-center font-bold text-xl mx-auto bg-amber-300 text-center break-words">
+  <div class="board-card flex flex-col bg-zinc-200 justify-evenly mx-6 w-10/12">
+    <div class="title-container flex justify-center items-center font-bold text-xl mx-auto bg-white text-center break-words">
       {{ post.title }}
     </div>
     <div class="img-container mx-auto">

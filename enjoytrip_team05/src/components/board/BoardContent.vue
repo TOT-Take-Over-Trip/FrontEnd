@@ -21,9 +21,7 @@ const imageUrl = computed(() => {
   if (props.post.thumbnail) {
     return `data:image/jpeg;base64,${arrayBufferToBase64(props.post.thumbnail)}`;
   }
-  // props.post.thumbnail = "/src/assets/img/test/testImg.jpeg";
   return null;
-  // return "/src/assets/img/test/testImg.jpeg";
 });
 
 
@@ -36,6 +34,7 @@ const truncatedContent = computed(() => {
 });
 
 const contentClass = computed(() => {
+  // TODO: 이거 지워줘야 함
   props.post.thumbnail = '/src/assets/img/test/testImg.jpeg'
   return props.post.thumbnail ? 'w-10/12' : 'w-full';
 });
