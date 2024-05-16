@@ -19,7 +19,8 @@ const arrayBufferToBase64 = (buffer) => {
 
 const imageUrl = computed(() => {
   if (props.post.thumbnail) {
-    return `data:image/jpeg;base64,${arrayBufferToBase64(props.post.thumbnail)}`;
+    // console.log(props.post.thumbnail)
+    return `data:image/jpeg;base64,${(props.post.thumbnail)}`;
   }
   return null;
 });
@@ -35,7 +36,7 @@ const truncatedContent = computed(() => {
 
 const contentClass = computed(() => {
   // TODO: 이거 지워줘야 함
-  props.post.thumbnail = '/src/assets/img/test/testImg.jpeg'
+  // props.post.thumbnail = '/src/assets/img/test/testImg.jpeg'
   return props.post.thumbnail ? 'w-10/12' : 'w-full';
 });
 </script>
@@ -60,8 +61,8 @@ const contentClass = computed(() => {
     </div>
     <!--  img 그림  -->
     <div class="w-2/12 mt-3" style="height: 100%" v-if="props.post.thumbnail != null">
-<!--      <img :src="imageUrl" alt="Post Thumbnail"/>-->
-      <img src="/src/assets/img/test/testImg.jpeg" style="height: 90%" alt="Post Thumbnail"/>
+      <img :src="imageUrl" style="height: 90%" alt="Post Thumbnail"/>
+<!--      <img src="/src/assets/img/test/testImg.jpeg" style="height: 90%" alt="Post Thumbnail"/>-->
     </div>
   </div>
 </template>

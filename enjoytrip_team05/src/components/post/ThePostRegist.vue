@@ -46,18 +46,37 @@ const onEditorChange = ({ quill, html, text }) => {
     state._content = html
 }
 
+//썸네일 등록
+const thumbnail = ref(null); // 썸네일 이미지 데이터를 저장할 ref 생성
+
+const onFileChange = (e) => {
+  const file = e.target.files[0]; // 선택된 파일 가져오기
+  console.log(file)
+  if (!file) {
+    return;
+  }
+  thumbnail.value = file// 파일로부터 URL 생성
+};
+
 //글 등록, 등록 후 router를 통한 이동
 const title = ref('');
 const router = useRouter();
 
+
 const regist = () => {
-  const postDto = {
-    memberId: 1, //TODO: 현재 로그인한 유저로 바꿔주기
-    title:title.value,
-    content:state.value.content
+  const formData = new FormData();  //타입 명시를 위한 form데이터 생성
+  const postDto = JSON.stringify({
+    memberId: 1, // TODO: 현재 로그인한 유저 정보로 대체
+    title: title.value,
+    content: state.value.content,
+  });
+  formData.append("postDto", new Blob([postDto], { type: "application/json" }));
+  if (thumbnail.value) {
+    formData.append("thumbnail", thumbnail.value);
   }
+
   const url = "http://localhost:8080/tot/posts/new";
-  axios.post(url,postDto).then(() => {
+  axios.post(url,formData).then(() => {
     console.log("게시글 등록 성공");
     router.push({name: 'board'}); //TODO: 이동 경로 설정
   });
@@ -79,6 +98,14 @@ const regist = () => {
           @change="onEditorChange($event)"
       />
     </div>
+    <!-- 썸네일 등록 -->
+    <div class="thumbnail-upload">
+      <input type="file" @change="onFileChange" accept="image/*"/>
+      <div v-if="thumbnail" class="thumbnail-preview">
+        <img :src="thumbnail" alt="Thumbnail preview"/>
+      </div>
+    </div>
+
     <!-- 버튼 그룹 추가 -->
     <div class="button-group">
       <button @click="regist">글등록</button>
@@ -119,6 +146,16 @@ const regist = () => {
 .editor-container {
   max-width: 100%;
   margin: 0 auto;
+}
+
+.thumbnail-upload {
+  margin: 20px 0;
+}
+
+.thumbnail-preview img {
+  width: 100%;
+  max-width: 200px; /* 미리보기 이미지 크기 조절 */
+  height: auto;
 }
 
 /* 버튼 그룹 스타일링 */
