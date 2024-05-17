@@ -32,6 +32,11 @@ const router = createRouter({
       component: () => import("@/components/board/BoardDetail.vue"),
     },
     {
+      path: '/board/members/:memberId',
+      name: 'boardMyList',
+      component: () => import("@/components/board/BoardMyList.vue"),
+    },
+    {
       // 코스 router
       path: "/course",
       name: "course",
