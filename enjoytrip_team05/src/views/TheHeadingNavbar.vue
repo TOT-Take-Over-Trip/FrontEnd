@@ -1,6 +1,27 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import {onMounted, ref} from "vue";
+import { useMenuStore } from "@/stores/menu";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+
+const menuStore = useMenuStore();
+const memberStore = useMemberStore();
+
+// 반응형을 유지하면서 스토어에서 속성을 추출하려면, storeToRefs()를 사용
+// https://pinia.vuejs.kr/core-concepts/
+const { menuList } = storeToRefs(menuStore);
+const { changeMenuState } = menuStore;
+
+const { userLogout } = memberStore;
+
+const logout = () => {
+  userLogout();
+  changeMenuState();
+};
+
+console.log(menuList.value);
 
 const navigation = [
   {
@@ -47,11 +68,13 @@ const navigation = [
   },
   { value: '상점', name: 'shop', current: false },
 ]
+
+
+
 </script>
 
 <template>
   <nav class="border-b-2">
-    <!--  TODO: 이거 양 끝 간격 조절할 수 있음  -->
     <div class="mx-56 px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between w-full">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -86,24 +109,27 @@ const navigation = [
           </div>
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-            <span class="absolute -inset-1.5" />
-            <span class="sr-only">View notifications</span>
-            <BellIcon class="h-6 w-6" aria-hidden="true" />
-          </button>
+          <div v-for="menu in menuList">
+            <button v-if="menu.show === true" class="mx-3">
+              {{ menu.name }}
+            </button>
+          </div>
 
           <!-- Profile dropdown -->
-          <Menu as="div" class="relative ml-3">
+          <Menu v-if="menuList[0].show === false" as="div" class="relative ml-3">
             <div>
               <MenuButton class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="absolute -inset-1.5" />
                 <span class="sr-only">Open user menu</span>
-                <!-- 프로필 이미지 -->
+                <!-- TODO: 이거 갈아 끼워야 됨 프로필 이미지 -->
                 <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
               </MenuButton>
             </div>
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
               <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+<!--                <MenuItem v-slot="{ active }" v-for="menu in menuList">-->
+<!--                  <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">{{ menu.name }}</a>-->
+<!--                </MenuItem>-->
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">마이페이지</a>
                 </MenuItem>
