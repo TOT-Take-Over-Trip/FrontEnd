@@ -9,7 +9,9 @@ import TheFooterNavbar from "@/views/TheFooterNavbar.vue";
   <nav>
     <TheHeadingNavbar />
   </nav>
-  <RouterView />
+  <div style="min-height: 86rem;">
+    <RouterView />
+  </div>
   <TheFooterNavbar />
 </template>
 

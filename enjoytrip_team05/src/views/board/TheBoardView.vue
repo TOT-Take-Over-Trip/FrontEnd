@@ -8,8 +8,8 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 // Import Swiper styles
 import 'swiper/css';
 import VBoardCard from "@/components/board/BoardCard.vue";
-import SearchComponent from "@/components/board/BoardSearchComponent.vue";
 import BoardContent from "@/components/board/BoardContent.vue";
+import VButton from "@/components/VButton.vue";
 
 
 // posts => 전체 포스트
