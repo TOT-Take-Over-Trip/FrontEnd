@@ -14,15 +14,15 @@ const navigation = [
       },
       {
         value: '내 게시글 보기',
-        name: 'board',
+        name: 'myBoard',
       },
       {
         value: '댓글 단 글 보기',
-        name: 'board',
+        name: 'myCommentBoard',
       },
       {
         value: '스크랩한 글 보기',
-        name: 'board',
+        name: 'myLikeBoard',
       }
     ]
   },
