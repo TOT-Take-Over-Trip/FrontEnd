@@ -61,7 +61,7 @@ const onFileChange = (e) => {
 //글 등록, 등록 후 router를 통한 이동
 const title = ref('');
 const router = useRouter();
-
+const URL = import.meta.env.VITE_BASE_URL;
 
 const regist = () => {
   const formData = new FormData();  //타입 명시를 위한 form데이터 생성
@@ -69,13 +69,14 @@ const regist = () => {
     memberId: 1, // TODO: 현재 로그인한 유저 정보로 대체
     title: title.value,
     content: state.value.content,
+    memberName: 'member1',
   });
   formData.append("postDto", new Blob([postDto], { type: "application/json" }));
   if (thumbnail.value) {
     formData.append("thumbnail", thumbnail.value);
   }
 
-  const url = "http://localhost:8080/tot/posts/new";
+  const url = `${URL}/posts/new`;
   axios.post(url,formData).then(() => {
     console.log("게시글 등록 성공");
     router.push({name: 'board'}); //TODO: 이동 경로 설정
