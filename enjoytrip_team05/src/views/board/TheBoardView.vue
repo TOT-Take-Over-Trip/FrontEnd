@@ -10,6 +10,7 @@ import 'swiper/css';
 import VBoardCard from "@/components/board/BoardCard.vue";
 import BoardContent from "@/components/board/BoardContent.vue";
 import VButton from "@/components/VButton.vue";
+import VSelect from "@/components/VSelect.vue";
 
 
 // posts => 전체 포스트
@@ -53,6 +54,20 @@ const goToBoardDetail = (postId) => {
 
 // TODO: 짝수 번째 마다 색 조금 다르게
 
+
+const options = ref([
+  {
+    id: 1,
+    name: '전체',
+  },
+  {
+    id: 2,
+    name: '제목',
+  }
+])
+
+
+
 onMounted(() => {
   fetchPosts();
 })
@@ -89,14 +104,10 @@ onMounted(() => {
       <div class="flex justify-around items-center w-full ">
         <!--  검색 + 검색아이콘 + 필터 + 글쓰기 -->
         <div class="flex items-center justify-center w-2/3 h-24">
-          <!--  TODO: select 아예 component로 사용할 수 있는 거 만들기    -->
           <!--  TODO: 이거 필터 내용 어떤거 할건지?    -->
-          <select class="me-12" style="height: 30%; width: 8%" v-model="searchCondition">
-            <option>제목</option>
-            <option>작성자</option>
-          </select>
+          <VSelect class="me-12 my-auto" style="height: 40%; width: 8%" v-model="searchCondition" :options="options" />
           <input type="text" class="text-xl border-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." v-model="searchContent">
-          <!--  TODO: click 할 때 게시글 검색으로 넘어가야돼    -->
+          <!--   TODO: 이거 검색할 때 일치하는 데이터 없으면 전체 랜더링 되는데 이거 해결해야 될듯       -->
           <img src="/src/assets/img/searchIcon.png" @click="searchPosts" class="mx-3" style="height: 49%" alt="searchIcon" />
           <RouterLink :to="{name: 'regist'}">
             <VButton class="w-32" style="height: 40%;">글쓰기</VButton>
