@@ -7,15 +7,6 @@ const props = defineProps({
 
 const maxLength = 800; // 글자 최대 길이
 
-const arrayBufferToBase64 = (buffer) => {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return window.btoa(binary);
-};
 
 const imageUrl = computed(() => {
   if (props.post.thumbnail) {
@@ -35,8 +26,6 @@ const truncatedContent = computed(() => {
 });
 
 const contentClass = computed(() => {
-  // TODO: 이거 지워줘야 함
-  // props.post.thumbnail = '/src/assets/img/test/testImg.jpeg'
   return props.post.thumbnail ? 'w-10/12' : 'w-full';
 });
 </script>
