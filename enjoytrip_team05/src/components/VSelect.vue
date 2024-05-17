@@ -4,18 +4,19 @@ import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } f
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
 const props = defineProps({
-  options: Object,
+  options: Array,
 });
 
 const selected = ref(props.options[0]);
 
 </script>
+
 <template>
   <Listbox as="div" v-model="selected">
     <div class="relative">
       <ListboxButton class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
-        <span class="flex items-center">
-          <span class="ml-3 block truncate">{{ selected.name }}</span>
+        <span class="flex justify-center items-center">
+          <span class="block truncate">{{ selected.name }}</span>
         </span>
         <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
           <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -26,8 +27,8 @@ const selected = ref(props.options[0]);
         <ListboxOptions class="absolute z-10 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
           <ListboxOption as="template" v-for="option in options" :key="option.id" :value="option" v-slot="{ active, selected }">
             <li :class="[active ? 'bg-indigo-600 text-white' : 'text-gray-900', 'relative cursor-default select-none py-2 pl-3 pr-9']">
-              <div class="flex items-center">
-                <span :class="[selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate']">{{ option.name }}</span>
+              <div class="flex justify-center items-center">
+                <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{ option.name }}</span>
               </div>
 
               <span v-if="selected" :class="[active ? 'text-white' : 'text-indigo-600', 'absolute inset-y-0 right-0 flex items-center pr-4']">
@@ -41,3 +42,19 @@ const selected = ref(props.options[0]);
   </Listbox>
 </template>
 
+<style scoped>
+/* Custom styles to ensure center alignment and appearance */
+.relative .block.truncate {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.flex.justify-center.items-center {
+  justify-content: center;
+}
+
+.ml-3 {
+  margin-left: 0 !important; /* Override margin-left to zero */
+}
+</style>

@@ -58,11 +58,11 @@ const goToBoardDetail = (postId) => {
 const options = ref([
   {
     id: 1,
-    name: '전체',
+    name: '제목',
   },
   {
     id: 2,
-    name: '제목',
+    name: '작성자',
   }
 ])
 
@@ -105,7 +105,7 @@ onMounted(() => {
         <!--  검색 + 검색아이콘 + 필터 + 글쓰기 -->
         <div class="flex items-center justify-center w-2/3 h-24">
           <!--  TODO: 이거 필터 내용 어떤거 할건지?    -->
-          <VSelect class="me-12 my-auto" style="height: 40%; width: 8%" v-model="searchCondition" :options="options" />
+          <VSelect class="me-12 my-auto" style="height: 40%; width: 10%;" v-model="searchCondition" :options="options" />
           <input type="text" class="text-xl border-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." v-model="searchContent">
           <!--   TODO: 이거 검색할 때 일치하는 데이터 없으면 전체 랜더링 되는데 이거 해결해야 될듯       -->
           <img src="/src/assets/img/searchIcon.png" @click="searchPosts" class="mx-3" style="height: 49%" alt="searchIcon" />
