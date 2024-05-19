@@ -4,6 +4,7 @@ import ThePostRegist from "@/components/post/ThePostRegist.vue"
 import TheBoardView from "@/views/board/TheBoardView.vue";
 import TheMyBoardView from "@/views/board/TheMyBoardView.vue"
 import TheMyCommentBoardView from "@/views/board/TheMyCommentBoardView.vue"
+import TheMyLikeBoardView from "@/views/board/TheMyLikeBoardView.vue"
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import axios from "axios";
 
@@ -61,6 +62,12 @@ const router = createRouter({
       path: "/myCommentBoard",
       name: "myCommentBoard",
       component: TheMyCommentBoardView
+    },
+    {
+      //스크랩한 글 보기
+      path: "/myLikeBoard",
+      name: "myLikeBoard",
+      component: TheMyLikeBoardView
     }
   ]
 })
