@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import TheMainView from "@/views/TheMainView.vue";
 import ThePostRegist from "@/components/post/ThePostRegist.vue"
 import TheBoardView from "@/views/board/TheBoardView.vue";
+import TheMyBoardView from "@/views/board/TheMyBoardView.vue"
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import axios from "axios";
 
@@ -48,6 +49,12 @@ const router = createRouter({
       name: "shop",
       component: TheMainView,
     },
+    {
+      // 내 게시글 보기
+      path: "/myBoard",
+      name: "myBoard",
+      component: TheMyBoardView
+    }
   ]
 })
 
