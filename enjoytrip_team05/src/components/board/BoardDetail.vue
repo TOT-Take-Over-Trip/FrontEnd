@@ -25,16 +25,28 @@ const comments = ref([]);
 const newComment = ref("");
 
 
-// TODO: post 방식으로 데이터 전송해줘야 함
+// TODO: 유저정보 바꿔줘야 함
 const submitComment = async () => {
-  // await axios.post(`${URL}/posts/`)
+  const data = {
+    postId : post.value.postId,
+    memberId : 1,
+    memberName : "익명의 유저",
+    content : newComment.value,
+  }
+  await axios.post(`${URL}/posts/comments/new`, data)
+  .then(response => {
+    comments.value.push(response.data);
+    newComment.value = "";
+  })
 };
 
+const memberId = 1; //TODO: 현재 로그인 유저로 바꿔줘야 함
 // console.log(route.params.postId);
 onMounted(async () => {
-  await axios.get(`${URL}/posts/${route.params.postId}`)
+  await axios.get(`${URL}/posts/${route.params.postId}?memberId=${memberId}`)
       .then((response) => {
-        post.value = response.data.postDto;
+        console.log(response.data);
+        post.value = response.data.postResponseDto;
         post.value.createdDate = post.value.createdDate.split(' ')[0];
         post.value.updatedDate = post.value.updatedDate.split(' ')[0];
         comments.value = response.data.postCommentDtos;
