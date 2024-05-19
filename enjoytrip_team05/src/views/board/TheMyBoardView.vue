@@ -89,6 +89,11 @@ onMounted(() => {
     </div>
     <!-- 검색창 END -->
 
+    <div class="flex justify-center items-center font-bold text-xl py-4 bg-gray-100">
+      내가 작성한 글 목록
+    </div>
+
+
     <!-- 전체 게시글 목록 (제목, 날짜, content:글자수로 자름) | 썸네일 START -->
     <RouterLink v-for="(post, index) in displayPosts"
                 :key="post.postId"
