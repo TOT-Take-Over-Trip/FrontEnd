@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import TheMainView from "@/views/TheMainView.vue";
 import ThePostRegist from "@/components/post/ThePostRegist.vue"
 import TheBoardView from "@/views/board/TheBoardView.vue";
+import TheItemView from "@/views/item/TheItemView.vue"
 import TheMyBoardView from "@/views/board/TheMyBoardView.vue"
 import TheMyCommentBoardView from "@/views/board/TheMyCommentBoardView.vue"
 import TheMyLikeBoardView from "@/views/board/TheMyLikeBoardView.vue"
@@ -49,7 +50,7 @@ const router = createRouter({
       // 상점 router
       path: "/shop",
       name: "shop",
-      component: TheMainView,
+      component: TheItemView,
     },
     {
       // 내 게시글 보기
@@ -68,7 +69,13 @@ const router = createRouter({
       path: "/myLikeBoard",
       name: "myLikeBoard",
       component: TheMyLikeBoardView
-    }
+    },
+    {
+      //아이템 상세정보 router
+      path: '/item/:itemId',
+      name: 'itemDetail',
+      component: () => import("@/components/item/ItemDetail.vue"),
+    },
   ]
 })
 
