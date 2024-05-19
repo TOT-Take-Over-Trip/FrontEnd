@@ -36,9 +36,10 @@ function searchPosts() {
 
 const topRankPosts = ref([]);
 const URL = import.meta.env.VITE_BASE_URL;
+const memberId = 1;
 const fetchPosts = async () => {
   try {
-    const response = await axios.get(`${URL}/posts`);
+    const response = await axios.get(`${URL}/posts?memberId=${memberId}`);
     posts.value = response.data.posts;
     topRankPosts.value = response.data.topRankPosts;
   } catch (error) {
