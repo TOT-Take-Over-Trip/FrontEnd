@@ -1,9 +1,18 @@
 <script setup>
 
-defineProps({
-  post: Object
-})
+import {computed} from "vue";
 
+const props = defineProps({
+  post: Object,
+});
+
+const imageUrl = computed(() => {
+  if (props.post.thumbnail) {
+    // console.log(props.post.thumbnail)
+    return `data:image/jpeg;base64,${(props.post.thumbnail)}`;
+  }
+  return null;
+});
 
 </script>
 
@@ -14,7 +23,7 @@ defineProps({
     </div>
     <div class="img-container mx-auto">
       <!--  TODO: axios로 데이터 받아줘야 함    -->
-      <img src="/src/assets/img/test/testImg.jpeg" class="rounded-xl" style="height: 100%; width: 100%" alt="thumbnail"/>
+      <img :src="imageUrl" class="rounded-xl" style="height: 100%; width: 100%" alt="thumbnail"/>
     </div>
 
   </div>
