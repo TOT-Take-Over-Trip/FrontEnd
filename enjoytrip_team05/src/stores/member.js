@@ -18,17 +18,18 @@ export const useMemberStore = defineStore("auth", () => {
         await userConfirm(
             loginUser,
             (response) => {
-                if (response.status === httpStatusCode.CREATE) {
+                // if (response.status === httpStatusCode.CREATE) {
                     console.log("로그인 성공!!!!")
                     let { data } = response
+                    console.log("response: ", data);
                     let accessToken = data["access-token"]
-                    let refreshToken = data["refresh-token"]
+                    // let refreshToken = data["refresh-token"]
                     isLogin.value = true
                     isLoginError.value = false
                     isValidToken.value = true
-                    sessionStorage.setItem("accessToken", accessToken)
-                    sessionStorage.setItem("refreshToken", refreshToken)
-                }
+                    sessionStorage.setItem("accessToken", data)
+                    // sessionStorage.setItem("refreshToken", refreshToken)
+                // }
             },
             (error) => {
                 console.log("로그인 실패!!!!")

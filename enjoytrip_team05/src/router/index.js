@@ -83,6 +83,26 @@ const router = createRouter({
       name: 'itemDetail',
       component: () => import("@/components/item/ItemDetail.vue"),
     },
+    {
+      path: '/auth/join',
+      name: 'join',
+      component: () => import("@/components/auth/AuthLogin.vue"),
+    },
+    {
+      path: '/auth/login',
+      name: 'login',
+      component: () => import("@/components/auth/AuthLogin.vue"),
+    },
+    {
+      path: '/auth/mypage',
+      name: 'mypage',
+      component: () => import("@/components/auth/AuthLogin.vue"),
+    },
+    {
+      path: '/auth/logout',
+      name: 'logout',
+      component: () => import("@/components/auth/AuthLogin.vue"),
+    },
   ]
 })
 

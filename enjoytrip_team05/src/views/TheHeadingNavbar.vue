@@ -110,9 +110,12 @@ const navigation = [
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
           <div v-for="menu in menuList">
-            <button v-if="menu.show === true" class="mx-3">
+            <RouterLink v-if="menu.show === true" :to="{name: menu.routeName}" class="mx-3">
               {{ menu.name }}
-            </button>
+            </RouterLink>
+<!--            <button v-if="menu.show === true" :to="{name: menu.routeName}" class="mx-3">-->
+<!--              {{ menu.name }}-->
+<!--            </button>-->
           </div>
 
           <!-- Profile dropdown -->

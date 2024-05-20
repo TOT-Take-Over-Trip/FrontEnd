@@ -4,10 +4,10 @@ import { defineStore } from "pinia";
 export const useMenuStore = defineStore("menuStore", () => {
     const menuList = ref([
         // routeName 별도로 지정해줘야 함
-        { name: "회원가입", show: true, routeName: "user-join" },
-        { name: "로그인", show: true, routeName: "user-login" },
-        { name: "내정보", show: false, routeName: "user-mypage" },
-        { name: "로그아웃", show: false, routeName: "user-logout" },
+        { name: "회원가입", show: true, routeName: "join" },
+        { name: "로그인", show: true, routeName: "login" },
+        { name: "내정보", show: false, routeName: "mypage" },
+        { name: "로그아웃", show: false, routeName: "logout" },
     ]);
 
     const changeMenuState = () => {

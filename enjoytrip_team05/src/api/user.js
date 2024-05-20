@@ -3,7 +3,8 @@ import { localAxios } from "@/util/http-commons";
 const local = localAxios();
 
 async function userConfirm(param, success, fail) {
-    await local.post(`/user/login`, param).then(success).catch(fail);
+    console.log("param: ", param);
+    await local.post('/auth/login', param).then(success).catch(fail);
 }
 
 async function findById(userid, success, fail) {
@@ -17,7 +18,7 @@ async function tokenRegeneration(user, success, fail) {
 }
 
 async function logout(userid, success, fail) {
-    await local.get(`/user/logout/${userid}`).then(success).catch(fail);
+    await local.get(`/auth/logout/${userid}`).then(success).catch(fail);
 }
 
 export { userConfirm, findById, tokenRegeneration, logout };
