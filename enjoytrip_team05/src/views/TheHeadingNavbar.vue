@@ -96,11 +96,11 @@ const navigation = [
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
               <div v-for="item in navigation" :key="item.name" class="relative group">
-                <RouterLink :to="item.name" :class="[item.current ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-xl font-medium']">
+                <RouterLink :to="{name: item.name}" :class="[item.current ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-xl font-medium']">
                   {{ item.value }}
                 </RouterLink>
                 <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity" style="position: absolute; z-index: 1000;">
-                  <RouterLink :to="subitem.name" v-for="subitem in item.submenu" :key="subitem" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <RouterLink :to="{name: subitem.name}" v-for="subitem in item.submenu" :key="subitem" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     {{ subitem.value }}
                   </RouterLink>
                 </div>
