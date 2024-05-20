@@ -6,6 +6,7 @@ import TheItemView from "@/views/item/TheItemView.vue"
 import TheMyBoardView from "@/views/board/TheMyBoardView.vue"
 import TheMyCommentBoardView from "@/views/board/TheMyCommentBoardView.vue"
 import TheMyLikeBoardView from "@/views/board/TheMyLikeBoardView.vue"
+import TheCourseView from "@/views/course/TheCourseView.vue";
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import axios from "axios";
 
@@ -44,7 +45,13 @@ const router = createRouter({
       // 코스 router
       path: "/course",
       name: "course",
-      component: TheMainView,
+      component: TheCourseView,
+    },
+    {
+      // 코스 상세정보 router
+      path: "/course/:courseId",
+      name: "courseDetail",
+      component: () => import("@/components/course/CourseDetail.vue"),
     },
     {
       // 상점 router
