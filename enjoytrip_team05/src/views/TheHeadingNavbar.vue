@@ -21,8 +21,6 @@ const logout = () => {
   changeMenuState();
 };
 
-console.log(menuList.value);
-
 const navigation = [
   {
     value: '게시판',
@@ -69,7 +67,9 @@ const navigation = [
   { value: '상점', name: 'shop', current: false },
 ]
 
-
+onMounted(() => {
+  changeMenuState();
+})
 
 </script>
 

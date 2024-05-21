@@ -18,18 +18,25 @@ export const useMemberStore = defineStore("auth", () => {
         await userConfirm(
             loginUser,
             (response) => {
-                // if (response.status === httpStatusCode.CREATE) {
+                if (response.status === httpStatusCode.OK) {
                     console.log("로그인 성공!!!!")
                     let { data } = response
                     console.log("response: ", data);
-                    let accessToken = data["access-token"]
+                    let accessToken = data["jwtToken"];
+                    let memberId = data["memberId"];
                     // let refreshToken = data["refresh-token"]
                     isLogin.value = true
                     isLoginError.value = false
                     isValidToken.value = true
-                    sessionStorage.setItem("accessToken", data)
+                    sessionStorage.setItem("accessToken", accessToken);
+                    sessionStorage.setItem("memberId", memberId);
                     // sessionStorage.setItem("refreshToken", refreshToken)
-                // }
+                }
+                else if (response.status === httpStatusCode.UNAUTHORIZED) {
+                    isLogin.value = false;
+                    isLoginError.value = true;
+                    isValidToken.value = false;
+                }
             },
             (error) => {
                 console.log("로그인 실패!!!!")
@@ -43,12 +50,12 @@ export const useMemberStore = defineStore("auth", () => {
 
     const getUserInfo = async (token) => {
         let decodeToken = jwtDecode(token)
-        console.log(decodeToken)
+        let memberId = sessionStorage.getItem("memberId");
         await findById(
-            decodeToken.userId,
+            memberId,
             (response) => {
                 if (response.status === httpStatusCode.OK) {
-                    userInfo.value = response.data.userInfo
+                    userInfo.value = response.data
                 } else {
                     console.log("유저 정보 없음!!!!")
                 }
@@ -106,25 +113,28 @@ export const useMemberStore = defineStore("auth", () => {
     }
 
     const userLogout = async () => {
-        console.log("로그아웃 아이디 : " + userInfo.value.userId)
-        await logout(
-            userInfo.value.userId,
-            (response) => {
-                if (response.status === httpStatusCode.OK) {
-                    isLogin.value = false
-                    userInfo.value = null
-                    isValidToken.value = false
-
-                    sessionStorage.removeItem("accessToken")
-                    sessionStorage.removeItem("refreshToken")
-                } else {
-                    console.error("유저 정보 없음!!!!")
-                }
-            },
-            (error) => {
-                console.log(error)
-            }
-        )
+        // console.log("로그아웃 아이디 : " + userInfo.value.userId)
+        console.log("userLogout function called!!!");
+        await sessionStorage.removeItem("accessToken");
+        await sessionStorage.removeItem("memberId");
+        // await logout(
+        //     userInfo.value.userId,
+        //     (response) => {
+        //         if (response.status === httpStatusCode.OK) {
+        //             isLogin.value = false
+        //             userInfo.value = null
+        //             isValidToken.value = false
+        //
+        //             sessionStorage.removeItem("accessToken")
+        //             sessionStorage.removeItem("refreshToken")
+        //         } else {
+        //             console.error("유저 정보 없음!!!!")
+        //         }
+        //     },
+        //     (error) => {
+        //         console.log(error)
+        //     }
+        // )
     }
 
     return {

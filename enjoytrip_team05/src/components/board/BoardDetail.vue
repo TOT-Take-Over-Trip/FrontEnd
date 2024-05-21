@@ -3,6 +3,7 @@ import axios from "axios";
 import { useRoute, useRouter } from 'vue-router';
 import {computed, onMounted, onUpdated, ref, watch} from "vue";
 import BoardComment from "@/components/board/BoardComment.vue";
+import {jwtDecode} from "jwt-decode";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -40,7 +41,13 @@ const submitComment = async () => {
   })
 };
 
-const memberId = 1; //TODO: 현재 로그인 유저로 바꿔줘야 함
+const token = sessionStorage.getItem("accessToken");
+const decodeToken = jwtDecode(token);
+const loginId = decodeToken.sub; //TODO: 현재 로그인 유저로 바꿔줘야 함
+const memberId = sessionStorage.getItem("memberId");
+console.log("decodeToken: ", decodeToken);
+console.log("loginId: ", loginId);
+
 // console.log(route.params.postId);
 onMounted(async () => {
   await axios.get(`${URL}/posts/${route.params.postId}?memberId=${memberId}`)
@@ -49,6 +56,7 @@ onMounted(async () => {
         post.value = response.data.postResponseDto;
         post.value.createdDate = post.value.createdDate.split(' ')[0];
         post.value.updatedDate = post.value.updatedDate.split(' ')[0];
+        console.log("post: ", post.value);
         comments.value = response.data.postCommentDtos;
         // console.log(comments);
         // console.log(comments.value[0].content);

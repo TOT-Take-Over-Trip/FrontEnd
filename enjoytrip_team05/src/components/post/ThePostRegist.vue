@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import {useRouter} from "vue-router";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 
 //quill editor
 const state = ref({
@@ -62,14 +63,18 @@ const onFileChange = (e) => {
 const title = ref('');
 const router = useRouter();
 const URL = import.meta.env.VITE_BASE_URL;
+const token = sessionStorage.getItem("accessToken");
+const decodeToken = jwtDecode(token);
+const memberName = decodeToken.sub;
+const memberId = sessionStorage.getItem("memberId");
 
 const regist = () => {
   const formData = new FormData();  //타입 명시를 위한 form데이터 생성
   const postDto = JSON.stringify({
-    memberId: 1, // TODO: 현재 로그인한 유저 정보로 대체
+    memberId: memberId,
     title: title.value,
     content: state.value.content,
-    memberName: 'member1',
+    memberName: memberName,
   });
   formData.append("postDto", new Blob([postDto], { type: "application/json" }));
   if (thumbnail.value) {

@@ -33,7 +33,7 @@ function searchPosts() {
 }
 
 const URL = import.meta.env.VITE_BASE_URL;
-const memberId = 1;
+const memberId = sessionStorage.getItem("memberId");
 const fetchPosts = async () => {
   try {
     const response = await axios.get(`${URL}/posts/members?memberId=${memberId}`);

@@ -7,8 +7,37 @@ import TheMyBoardView from "@/views/board/TheMyBoardView.vue"
 import TheMyCommentBoardView from "@/views/board/TheMyCommentBoardView.vue"
 import TheMyLikeBoardView from "@/views/board/TheMyLikeBoardView.vue"
 import TheCourseView from "@/views/course/TheCourseView.vue";
-import BoardDetail from "@/components/board/BoardDetail.vue";
-import axios from "axios";
+import {storeToRefs} from "pinia";
+import { useMemberStore } from "@/stores/member";
+import {useMenuStore} from "@/stores/menu.js";
+
+const onlyAuthUser = async (to, from, next) => {
+  const memberStore = useMemberStore();
+  const { userInfo, isValidToken } = storeToRefs(memberStore);
+  const { getUserInfo } = memberStore;
+
+  let token = sessionStorage.getItem("accessToken");
+  // userInfo 가 null이면 token 확인
+  // token 없으면 그 때 login으로 넘김
+  if (userInfo.value != null && token) {
+    await getUserInfo(token);
+  }
+  else if (userInfo.value === null) {
+    if (!token) {
+      next({name: "login"});
+    }
+    await getUserInfo(token);
+  }
+  next();
+};
+
+const removeSessionItem = async (to, from, next) => {
+  sessionStorage.removeItem("memberId");
+  sessionStorage.removeItem("accessToken");
+  next();
+  window.location.reload();
+}
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +51,7 @@ const router = createRouter({
     {
       path: "/regist",
       name: "regist",
+      beforeEnter: onlyAuthUser,
       component: ThePostRegist,
     },
     {
@@ -63,18 +93,21 @@ const router = createRouter({
       // 내 게시글 보기
       path: "/myBoard",
       name: "myBoard",
+      beforeEnter: onlyAuthUser,
       component: TheMyBoardView
     },
     {
       //댓글단 글 보기
       path: "/myCommentBoard",
       name: "myCommentBoard",
+      beforeEnter: onlyAuthUser,
       component: TheMyCommentBoardView
     },
     {
       //스크랩한 글 보기
       path: "/myLikeBoard",
       name: "myLikeBoard",
+      beforeEnter: onlyAuthUser,
       component: TheMyLikeBoardView
     },
     {
@@ -96,12 +129,14 @@ const router = createRouter({
     {
       path: '/auth/mypage',
       name: 'mypage',
+      beforeEnter: onlyAuthUser,
       component: () => import("@/components/auth/AuthLogin.vue"),
     },
     {
-      path: '/auth/logout',
+      path: '/',
       name: 'logout',
-      component: () => import("@/components/auth/AuthLogin.vue"),
+      beforeEnter: removeSessionItem,
+      component: TheMainView,
     },
   ]
 })

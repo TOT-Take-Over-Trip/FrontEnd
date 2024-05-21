@@ -6,7 +6,6 @@ import {useMenuStore} from "@/stores/menu.js";
 import {storeToRefs} from "pinia";
 import {useMemberStore} from "@/stores/member.js";
 import {useRouter} from "vue-router";
-import axios from "axios";
 
 const router = useRouter()
 
@@ -21,9 +20,9 @@ const loginUser = ref({
   password: "",
 })
 
+const loginErrorMessage = ref("");
 
 const login = async () => {
-
   await userLogin(loginUser.value)
 
   let token = sessionStorage.getItem("accessToken")
@@ -32,10 +31,10 @@ const login = async () => {
     getUserInfo(token)
     changeMenuState()
     router.replace("/")
+  } else {
+    loginErrorMessage.value = "아이디와 비밀번호를 다시 확인해주세요.";
   }
 };
-
-
 </script>
 
 <template>
@@ -60,6 +59,9 @@ const login = async () => {
               class="w-full px-4 py-2 mt-2 border rounded-md focus:ring focus:ring-indigo-300 focus:outline-none"
               required
           />
+        </div>
+        <div v-if="loginErrorMessage" class="mt-4 text-red-600">
+          {{ loginErrorMessage }}
         </div>
         <div class="flex items-center justify-between mt-4">
           <button
