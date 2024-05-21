@@ -41,9 +41,16 @@ const searchPlace = () => {
             lat: marker.latitude,
             lng: marker.longitude,
             infoWindow: {
-              name: marker.name,
               address: marker.address,
+              content: marker.content,      // 정말 자세한 내용
+              createdDate: marker.createdDate,
+              gugunCode: marker.gugunCode,
+              name: marker.name,
+              placeId: marker.placeId,
+              sidoCode: marker.sidoCode,
+              status: marker.status,
               image: marker.thumbnail,
+              updatedDate: marker.updatedDate,
               visible: false
             }
           };
@@ -54,6 +61,19 @@ const searchPlace = () => {
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         map.value?.setBounds(bounds);
       })
+  let bounds;
+  markerList.value.forEach((markerInfo) => {
+    let point = new kakao.maps.LatLng(markerInfo.lat, markerInfo.lng);
+    let marker = new kakao.maps.Marker({position: point})
+    if (map.value !== undefined) {
+      marker.setMap(map.value);
+    }
+    bounds.extend(point)
+  })
+
+  // if (map.value !== undefined) {
+  //   map.value.setBounds(bounds);
+  // }
 }
 
 const onClickMapMarker = (marker) => {
@@ -90,12 +110,6 @@ const coursePlaceMarker = computed(() => {
   return coursePlaces.value;
 });
 
-const printList = () => {
-  // for (let i = 0; i < coursePlaces.value.length; i++) {
-  //   console.log(coursePlaces.value[i].place.name);
-  // }
-  console.log(coursePlaces.value)
-}
 
 // 왼쪽 리스트 카드를 누르면 해당 위치로 focus 이동
 const movePointer = (coursePlace) => {
@@ -123,8 +137,6 @@ const showOverlay = (coursePlace) => {
 
 // 코스 업데이트하고 서버에 요청
 const updateCourse = () => {
-  console.log(coursePlaces.value);
-
   axios.put(`${URL}/courses/6`, coursePlaces.value, {
     headers: {
       'Content-Type': 'application/json',
@@ -133,26 +145,37 @@ const updateCourse = () => {
 }
 
 const addCourse = (marker) => {
+  let coursePlaceId = 0;
+  for (let course of coursePlaces.value) {
+    if (coursePlaceId < course.coursePlaceId)
+      coursePlaceId = course.coursePlaceId;
+  }
   const coursePlace = {
     place: {
       address: marker.infoWindow.address,
-      content: "", // TODO: 사용자 입력 (이 장소에 대해 자세한 내용 작성)
-      gugunCode: "",
-      sidoCode: "",
-      status: "active",
+      content: marker.infoWindow.content,
+      createdDate: marker.infoWindow.createdDate,
+      gugunCode: marker.infoWindow.gugunCode,
+      sidoCode: marker.infoWindow.sidoCode,
+      status: marker.infoWindow.status,
       thumbnail: marker.infoWindow.image,
       latitude: marker.lat,
       longitude: marker.lng,
       name: marker.infoWindow.name,
+      placeId: marker.infoWindow.placeId,
+      updatedDate: marker.infoWindow.updatedDate,
     },
+    coursePlaceId: ++coursePlaceId,
     content: "", // TODO: 사용자 입력 (이 장소에 대해 내용 작성)
-    placeId: "",
+    courseId: coursePlaces.value[0].courseId,
+    placeId: marker.infoWindow.placeId,
     sequence: coursePlaces.value.length,
     show: false,
     status: "active",
-    updatedDate: "",
+    updatedDate: marker.infoWindow.updatedDate,
+    createdDate: marker.infoWindow.createdDate,
   };
-
+  marker.infoWindow.visible = false;
 
   coursePlaces.value.push(coursePlace);
 }
@@ -161,7 +184,6 @@ onMounted(async () => {
   // TODO: courseId 랑 memberId props 로 받아와야 함
   await axios.get(`${URL}/courses/6?memberId=2`)
   .then((response) => {
-    // console.log(response.data);
     course.value = response.data;
     coursePlaces.value = course.value.coursePlaces.map(coursePlace => {
       return {
@@ -184,16 +206,16 @@ onMounted(async () => {
     <div class="flex justify-around items-center w-full ">
       <!--  검색 + 검색아이콘 + 필터 + 글쓰기 -->
       <div class="flex items-center justify-center w-2/3 h-24">
-        <input type="text" class="text-xl border-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." v-model="searchContent">
+        <input type="text" class="text-xl border-2 p-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." v-model="searchContent">
         <img src="/src/assets/img/searchIcon.png" @click="searchPlace" class="mx-3" style="height: 49%" alt="searchIcon" />
         <VButton @click="updateCourse">등록</VButton>
       </div>
     </div>
   </div>
   <div class="flex">
-    <div class="w-4/12">
+    <div class="w-4/12 border-2 mx-1 rounded-xl shadow-inner">
       <!-- v-model로 데이터 배열 상태로 저장 -->
-      <draggable v-model="coursePlaces" itemKey="id" class="list-group" @update="printList">
+      <draggable v-model="coursePlaces" itemKey="id" class="list-group">
         <template #item="{ element }">
           <div
               class="draggable-item shadow-lg flex h-28 items-center justify-between text-3xl my-2 mx-2 rounded-xl bg-sky-50">
