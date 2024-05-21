@@ -57,6 +57,9 @@ const searchPlace = () => {
       })
 }
 
+const onClickMapMarker = (marker) => {
+  marker.infoWindow.visible = !marker.infoWindow.visible;
+}
 
 
 function removeQuotesFromPlaceFields(arr) {
@@ -76,13 +79,23 @@ onMounted(async () => {
   .then((response) => {
     // console.log(response.data);
     course.value = response.data;
-    coursePlaces.value = course.value.coursePlaces;
+    coursePlaces.value = course.value.coursePlaces.map(coursePlace => {
+      return {
+        ...coursePlace,
+        show: false,
+      };
+    });
     removeQuotesFromPlaceFields(coursePlaces.value)
   })
   .catch((error) => {
     console.error("Single course error: ", error);
   })
 })
+
+// 마커 전용
+const coursePlaceMarker = computed(() => {
+  return coursePlaces.value;
+});
 
 const printList = () => {
   // for (let i = 0; i < coursePlaces.value.length; i++) {
@@ -105,12 +118,13 @@ const movePointer = (coursePlace) => {
 
 // 삭제 버튼 누르면 리스트 내에서 item 삭제하기
 const removeItem = (element) => {
-  console.log(coursePlaces.value);
-  console.log(element);
   coursePlaces.value = coursePlaces.value.filter(item => item.coursePlaceId !== element.coursePlaceId);
-  console.log(coursePlaces.value);
 }
 
+// 마커 누르면 오버레이 생성하는 함수
+const showOverlay = (coursePlace) => {
+  coursePlace.show = !coursePlace.show;
+}
 
 
 </script>
@@ -144,36 +158,43 @@ const removeItem = (element) => {
     </div>
     <div class="w-8/12">
       <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" @onLoadKakaoMap="onLoadKakaoMap" :draggable="true" style="width: 100%; height: 100vh;">
-        <kakao-map-marker v-for="(coursePlace, index) in course.coursePlaces"
+        <!--   마커 등록     -->
+        <kakao-map-marker v-for="(coursePlace, index) in coursePlaceMarker"
+                          @onClickKakaoMapMarker="showOverlay(coursePlace)"
                           :key="course.coursePlaces.coursePlaceId"
-                          :lat="coursePlace.place.latitude" :lng="coursePlace.place.longitude" :draggable="true">
+                          :lat="coursePlace.place.latitude" :lng="coursePlace.place.longitude" :draggable="false" :clickable="true">
         </kakao-map-marker>
         <kakao-map-marker :lat="coordinate.lat" :lng="coordinate.lng"></kakao-map-marker>
-        <KakaoMapCustomOverlay v-for="(courseplace, index) in course.coursePlaces"
-                               :key="courseplace.coursePlaceId"
-                               :lat="courseplace.place.latitude" :lng="courseplace.place.longitude" :draggable="true">
-          <div
-              style="
-              padding: 10px;
-              background-color: white;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-              display: flex;
-              flex-direction: column;
-              align-items: flex-start;
-            "
-          >
-            <div style="font-weight: bold; margin-bottom: 5px">{{courseplace.place.name}}</div>
-            <div style="display: flex">
-              <div style="margin-right: 10px">
-                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70" />
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: flex-start">
-                <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{courseplace.place.address}}</div>
+
+        <!--   마커 클릭 시 설명 카드 등장하도록     -->
+        <KakaoMapCustomOverlay v-for="(coursePlace, index) in coursePlaceMarker"
+                               :key="coursePlace.coursePlaceId"
+                               :lat="coursePlace.place.latitude" :lng="coursePlace.place.longitude" :draggable="true">
+          <div v-if="coursePlace.show === true">
+            <div
+                style="
+                padding: 10px;
+                background-color: white;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+              "
+            >
+              <div style="font-weight: bold; margin-bottom: 5px">{{coursePlace.place.name}}</div>
+              <div style="display: flex">
+                <div style="margin-right: 10px">
+                  <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70" />
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-start">
+                  <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{coursePlace.place.address}}</div>
+                </div>
               </div>
             </div>
           </div>
         </KakaoMapCustomOverlay>
+
         <KakaoMapMarker
             v-for="(marker, index) in markerList"
             :key="marker.key === undefined ? index : marker.key"
