@@ -11,9 +11,9 @@ const URL = import.meta.env.VITE_BASE_URL;
 
 const course = ref({})
 onMounted(async () => {
-  await axios.get(`${URL}/courses/3?memberId=2`)
+  await axios.get(`${URL}/courses/6?memberId=2`)
   .then((response) => {
-    // console.log(response.data);
+    console.log(response.data);
     course.value = response.data;
     console.log(course.value.coursePlaces);
   })
@@ -26,6 +26,10 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="flex w-4/12">
+
+  </div>
+
   <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true">
     <kakao-map-marker v-for="(courplace, index) in course.coursePlaces"
                       :key="course.coursePlaces.coursePlaceId"

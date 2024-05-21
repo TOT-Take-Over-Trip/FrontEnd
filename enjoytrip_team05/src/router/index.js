@@ -84,6 +84,13 @@ const router = createRouter({
       component: () => import("@/components/course/CourseDetail.vue"),
     },
     {
+      // 코스 상세정보 router
+      path: "/course/regist",
+      name: "courseRegist",
+      beforeEnter: onlyAuthUser,
+      component: () => import("@/views/course/TheCourseRegistView.vue"),
+    },
+    {
       // 상점 router
       path: "/shop",
       name: "shop",

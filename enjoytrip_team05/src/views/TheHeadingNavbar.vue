@@ -60,7 +60,7 @@ const navigation = [
       },
       {
         value: '코스 등록',
-        name: 'board',
+        name: 'courseRegist',
       },
     ]
   },
