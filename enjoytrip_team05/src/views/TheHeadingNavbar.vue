@@ -1,7 +1,7 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import { useMenuStore } from "@/stores/menu";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
@@ -67,9 +67,19 @@ const navigation = [
   { value: '상점', name: 'shop', current: false },
 ]
 
+const itemHover = ref(null);
+
+const handleMouseEnter = (name) => {
+  itemHover.value = name;
+};
+
+const handleMouseLeave = () => {
+  itemHover.value = null;
+};
+
 onMounted(() => {
   changeMenuState();
-})
+});
 
 </script>
 
@@ -95,27 +105,32 @@ onMounted(() => {
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <div v-for="item in navigation" :key="item.name" class="relative group">
+              <div
+                  v-for="item in navigation"
+                  :key="item.name"
+                  class="relative group"
+                  @mouseenter="handleMouseEnter(item.name)"
+                  @mouseleave="handleMouseLeave"
+              >
                 <RouterLink :to="{name: item.name}" :class="[item.current ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-xl font-medium']">
                   {{ item.value }}
                 </RouterLink>
-                <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity" style="position: absolute; z-index: 1000;">
-                  <RouterLink :to="{name: subitem.name}" v-for="subitem in item.submenu" :key="subitem" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    {{ subitem.value }}
-                  </RouterLink>
-                </div>
+                <transition name="fade">
+                  <div v-show="itemHover === item.name" class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-50">
+                    <RouterLink :to="{name: subitem.name}" v-for="subitem in item.submenu" :key="subitem.name" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      {{ subitem.value }}
+                    </RouterLink>
+                  </div>
+                </transition>
               </div>
             </div>
           </div>
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <div v-for="menu in menuList">
+          <div v-for="menu in menuList" :key="menu.routeName">
             <RouterLink v-if="menu.show === true" :to="{name: menu.routeName}" class="mx-3">
               {{ menu.name }}
             </RouterLink>
-<!--            <button v-if="menu.show === true" :to="{name: menu.routeName}" class="mx-3">-->
-<!--              {{ menu.name }}-->
-<!--            </button>-->
           </div>
 
           <!-- Profile dropdown -->
@@ -130,9 +145,6 @@ onMounted(() => {
             </div>
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
               <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-<!--                <MenuItem v-slot="{ active }" v-for="menu in menuList">-->
-<!--                  <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">{{ menu.name }}</a>-->
-<!--                </MenuItem>-->
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">마이페이지</a>
                 </MenuItem>
@@ -160,5 +172,11 @@ onMounted(() => {
 <style scoped>
 .navbar-inner {
   width: 100%;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
 }
 </style>
