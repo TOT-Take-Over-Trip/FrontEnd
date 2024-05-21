@@ -1,10 +1,9 @@
 <script setup>
 import axios from 'axios';
 import {computed, onMounted, ref} from "vue";
-import { KakaoMap, KakaoMapMarker, KakaoMapCustomOverlay } from 'vue3-kakao-maps';
+import { KakaoMap, KakaoMapMarker, KakaoMapCustomOverlay, KakaoMapMarkerPolyline } from 'vue3-kakao-maps';
 import draggable from "vuedraggable";
 import VButton from "@/components/VButton.vue";
-
 
 const markerList = ref([]);
 const onLoadKakaoMap = (mapRef) => {
@@ -14,7 +13,6 @@ const onLoadKakaoMap = (mapRef) => {
 // 검색 키워드
 
 const searchContent = ref('')
-const searchCondition = ref('제목')
 const searchedData = ref({});
 const coordinate = {
   lat: 37.566826,
@@ -35,7 +33,6 @@ const searchPlace = () => {
   markerList.value = [];
   axios.get(`${URL}/places?keyword=${searchContent.value}`)
       .then((response) => {
-        console.log(response.data)
         searchedData.value = response.data;
         const bounds = new kakao.maps.LatLngBounds();
 
@@ -44,7 +41,9 @@ const searchPlace = () => {
             lat: marker.latitude,
             lng: marker.longitude,
             infoWindow: {
-              content: marker.name,
+              name: marker.name,
+              address: marker.address,
+              image: marker.thumbnail,
               visible: false
             }
           };
@@ -61,6 +60,17 @@ const onClickMapMarker = (marker) => {
   marker.infoWindow.visible = !marker.infoWindow.visible;
 }
 
+const latLngList = computed(()=> {
+  const latlng = ref([]);
+  for (let marker of coursePlaces.value) {
+    const markerItem = {
+      lat: marker.place.latitude,
+      lng: marker.place.longitude,
+    }
+    latlng.value.push(markerItem);
+  }
+  return latlng.value;
+})
 
 function removeQuotesFromPlaceFields(arr) {
   return arr.map(item => {
@@ -74,23 +84,6 @@ function removeQuotesFromPlaceFields(arr) {
   });
 }
 
-onMounted(async () => {
-  await axios.get(`${URL}/courses/6?memberId=2`)
-  .then((response) => {
-    // console.log(response.data);
-    course.value = response.data;
-    coursePlaces.value = course.value.coursePlaces.map(coursePlace => {
-      return {
-        ...coursePlace,
-        show: false,
-      };
-    });
-    removeQuotesFromPlaceFields(coursePlaces.value)
-  })
-  .catch((error) => {
-    console.error("Single course error: ", error);
-  })
-})
 
 // 마커 전용
 const coursePlaceMarker = computed(() => {
@@ -104,7 +97,9 @@ const printList = () => {
   console.log(coursePlaces.value)
 }
 
+// 왼쪽 리스트 카드를 누르면 해당 위치로 focus 이동
 const movePointer = (coursePlace) => {
+  console.log("coursePlace: ", coursePlace);
   const place = coursePlace.place;
   // map.value = mapRef;
   let bounds = new kakao.maps.LatLngBounds();
@@ -126,6 +121,60 @@ const showOverlay = (coursePlace) => {
   coursePlace.show = !coursePlace.show;
 }
 
+// 코스 업데이트하고 서버에 요청
+const updateCourse = () => {
+  console.log(coursePlaces.value);
+
+  axios.put(`${URL}/courses/6`, coursePlaces.value, {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+}
+
+const addCourse = (marker) => {
+  const coursePlace = {
+    place: {
+      address: marker.infoWindow.address,
+      content: "", // TODO: 사용자 입력 (이 장소에 대해 자세한 내용 작성)
+      gugunCode: "",
+      sidoCode: "",
+      status: "active",
+      thumbnail: marker.infoWindow.image,
+      latitude: marker.lat,
+      longitude: marker.lng,
+      name: marker.infoWindow.name,
+    },
+    content: "", // TODO: 사용자 입력 (이 장소에 대해 내용 작성)
+    placeId: "",
+    sequence: coursePlaces.value.length,
+    show: false,
+    status: "active",
+    updatedDate: "",
+  };
+
+
+  coursePlaces.value.push(coursePlace);
+}
+
+onMounted(async () => {
+  // TODO: courseId 랑 memberId props 로 받아와야 함
+  await axios.get(`${URL}/courses/6?memberId=2`)
+  .then((response) => {
+    // console.log(response.data);
+    course.value = response.data;
+    coursePlaces.value = course.value.coursePlaces.map(coursePlace => {
+      return {
+        ...coursePlace,
+        show: false,
+      };
+    });
+    removeQuotesFromPlaceFields(coursePlaces.value)
+  })
+  .catch((error) => {
+    console.error("Single course error: ", error);
+  })
+})
 
 </script>
 
@@ -137,6 +186,7 @@ const showOverlay = (coursePlace) => {
       <div class="flex items-center justify-center w-2/3 h-24">
         <input type="text" class="text-xl border-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." v-model="searchContent">
         <img src="/src/assets/img/searchIcon.png" @click="searchPlace" class="mx-3" style="height: 49%" alt="searchIcon" />
+        <VButton @click="updateCourse">등록</VButton>
       </div>
     </div>
   </div>
@@ -158,17 +208,21 @@ const showOverlay = (coursePlace) => {
     </div>
     <div class="w-8/12">
       <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" @onLoadKakaoMap="onLoadKakaoMap" :draggable="true" style="width: 100%; height: 100vh;">
+
+        <!--   poly line 등록     -->
+        <KakaoMapMarkerPolyline :markerList="latLngList" :showMarkerOrder="true" :endArrow="true"/>
+
         <!--   마커 등록     -->
-        <kakao-map-marker v-for="(coursePlace, index) in coursePlaceMarker"
+        <KakaoMapMarker v-for="(coursePlace, index) in coursePlaceMarker"
                           @onClickKakaoMapMarker="showOverlay(coursePlace)"
                           :key="course.coursePlaces.coursePlaceId"
                           :lat="coursePlace.place.latitude" :lng="coursePlace.place.longitude" :draggable="false" :clickable="true">
-        </kakao-map-marker>
-        <kakao-map-marker :lat="coordinate.lat" :lng="coordinate.lng"></kakao-map-marker>
+        </KakaoMapMarker>
 
-        <!--   마커 클릭 시 설명 카드 등장하도록     -->
+        <!-- 왼쪽에 작성 중인 코스의 마커 클릭 시 설명 카드 등장하도록     -->
         <KakaoMapCustomOverlay v-for="(coursePlace, index) in coursePlaceMarker"
                                :key="coursePlace.coursePlaceId"
+                               :yAnchor="1.4"
                                :lat="coursePlace.place.latitude" :lng="coursePlace.place.longitude" :draggable="true">
           <div v-if="coursePlace.show === true">
             <div
@@ -183,11 +237,11 @@ const showOverlay = (coursePlace) => {
               "
             >
               <div style="font-weight: bold; margin-bottom: 5px">{{coursePlace.place.name}}</div>
-              <div style="display: flex">
+              <div class="flex">
                 <div style="margin-right: 10px">
                   <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70" />
                 </div>
-                <div style="display: flex; flex-direction: column; align-items: flex-start">
+                <div class="flex mt-3">
                   <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{coursePlace.place.address}}</div>
                 </div>
               </div>
@@ -195,20 +249,45 @@ const showOverlay = (coursePlace) => {
           </div>
         </KakaoMapCustomOverlay>
 
+
+        <!--  검색하면 나오는 마커들      -->
         <KakaoMapMarker
             v-for="(marker, index) in markerList"
             :key="marker.key === undefined ? index : marker.key"
             :lat="marker.lat"
             :lng="marker.lng"
-            :infoWindow="marker.infoWindow"
             :clickable="true"
             @onClickKakaoMapMarker="onClickMapMarker(marker)"
-        />
+        >
+        </KakaoMapMarker>
+
+        <!--   마커 클릭 시 설명 카드 등장하도록     -->
+        <KakaoMapCustomOverlay v-for="(marker, index) in markerList"
+                               :key="marker.key === undefined ? index : marker.key"
+                               :lat="marker.lat" :lng="marker.lng" :infoWindow="marker.infoWindow"
+                               :yAnchor="3"
+                               :draggable="true" :clickable="true"
+        >
+          <div v-if="marker.infoWindow.visible === true"
+               class="flex flex-col items-start justify-evenly"
+               style="width: 30rem; height: 16rem; padding: 10px; background-color: white; border: 1px solid #ccc; border-radius: 5px;">
+            <div class="font-bold mb-2 text-2xl" >
+              {{marker.infoWindow.name}}
+            </div>
+            <div class="flex justify-center" style="height: 50%;">
+              <img :src="marker.infoWindow.image" width="100%;" />
+            </div>
+            <div class="flex justify-center items-center mt-3" style="width: 100%;">
+              <div>{{marker.infoWindow.address}}</div>
+              <VButton class="ms-4 text-sm" @click="addCourse(marker)">등록</VButton>
+            </div>
+          </div>
+        </KakaoMapCustomOverlay>
       </KakaoMap>
     </div>
   </div>
-
 </template>
+
 <style>
 /* 스타일을 필요에 맞게 조정하세요 */
 .draggable-item {
