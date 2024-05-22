@@ -7,6 +7,7 @@ import TheMyBoardView from "@/views/board/TheMyBoardView.vue"
 import TheMyCommentBoardView from "@/views/board/TheMyCommentBoardView.vue"
 import TheMyLikeBoardView from "@/views/board/TheMyLikeBoardView.vue"
 import TheCourseView from "@/views/course/TheCourseView.vue";
+import BoardModifyView from "@/components/board/BoardModify.vue";
 import {storeToRefs} from "pinia";
 import { useMemberStore } from "@/stores/member";
 import {useMenuStore} from "@/stores/menu.js";
@@ -68,6 +69,13 @@ const router = createRouter({
       name: 'boardDetail',
       beforeEnter: onlyAuthUser,
       component: () => import("@/components/board/BoardDetail.vue"),
+    },
+      //보드 수정
+    {
+      path: '/board/modify/:postId',
+      name: 'boardModify',
+      beforeEnter: onlyAuthUser,
+      component: BoardModifyView
     },
     {
       // 코스 router

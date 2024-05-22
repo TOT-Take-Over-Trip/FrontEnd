@@ -62,6 +62,9 @@ onMounted(async () => {
       })
 })
 
+const confirmDelete = () => {
+  console.log("삭제")
+}
 </script>
 
 <template>
@@ -71,10 +74,10 @@ onMounted(async () => {
     <div class="flex ">
       <div>{{post.memberName}}&ensp;|&ensp;</div>
       <div>{{ post.updatedDate }}&ensp;|&ensp;</div>
-      <!--   TODO: RouterLink로 수정 하는 걸로 갈아끼워야 함   -->
-      <div>수정&ensp;|&ensp;</div>
-      <!--   TODO: 진짜 삭제할 건지 물어봐야 함     -->
-      <div>삭제</div>
+      <!-- RouterLink로 수정하는 부분 -->
+      <RouterLink v-if="post.memberId == memberId" :to="{ name: 'boardModify', params: { postId: post.id } }">수정 &ensp;|&ensp;</RouterLink>
+      <!-- 삭제 버튼 클릭 시 deletePost 메소드 호출 -->
+      <div v-if="post.memberId == memberId" @click="confirmDelete">삭제</div>
     </div>
     <div class="mt-14 px-2" style="min-height: 56rem;" v-html="post.content"></div>
     <!-- 댓글 입력 박스 -->
