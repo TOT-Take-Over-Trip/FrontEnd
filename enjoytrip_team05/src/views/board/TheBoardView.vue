@@ -136,7 +136,7 @@ onMounted(() => {
 .search-container {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 1;
   background-color: white; /* 배경색을 설정하여 스크롤 시 다른 요소와 겹치지 않게 함 */
 }
 </style>

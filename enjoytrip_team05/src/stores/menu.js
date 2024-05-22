@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
 
+const URL = import.meta.env.VITE_BASE_URL;
+
 export const useMenuStore = defineStore("menuStore", () => {
     const menuList = ref([
         { name: "회원가입", show: true, routeName: "join" },
@@ -10,15 +12,19 @@ export const useMenuStore = defineStore("menuStore", () => {
         { name: "로그아웃", show: false, routeName: "logout" },
     ]);
 
+    const notificationList = ref([]);
     const fetchMenuItems = async () => {
         try {
             let memberId = sessionStorage.getItem("memberId");
-            const response = await axios.get(`http://localhost:8080/tot/members/${memberId}`); // 서버 URL로 변경
-            console.log(response);
-            const userInfo = response.data;
-            const point = userInfo.point;
-            menuList.value.push({name: "Point: " + point, show: true}); //point 정보를 넣어주고 싶음
-            // menuList.value = [...menuList.value, ...serverMenuItems];
+            const userResponse = await axios.get(`${URL}/members/${memberId}`); //유저 정보 조회
+            const point = userResponse.data.point;
+            if(menuList.value.length<5) {
+                menuList.value.push({name: "Point: " + point, show: true});
+            }
+
+            const notificationResponse = await axios.get(`${URL}/notifications?memberId=${memberId}`); //유저 알림 목록 조회
+            notificationList.value = notificationResponse.data;
+            console.log(notificationList);
         } catch (error) {
             console.error("Failed to fetch menu items", error);
         }
@@ -49,6 +55,7 @@ export const useMenuStore = defineStore("menuStore", () => {
 
     return {
         menuList,
+        notificationList,
         fetchMenuItems,
         changeMenuState,
     };

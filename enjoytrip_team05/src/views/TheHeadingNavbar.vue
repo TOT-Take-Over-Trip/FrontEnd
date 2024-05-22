@@ -1,20 +1,52 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { onMounted, ref } from "vue";
+import {computed, onMounted, ref} from "vue";
 import { useMenuStore } from "@/stores/menu";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
+import axios from "axios";
 
 const menuStore = useMenuStore();
 const memberStore = useMemberStore();
 
 // 반응형을 유지하면서 스토어에서 속성을 추출하려면, storeToRefs()를 사용
 // https://pinia.vuejs.kr/core-concepts/
-const { menuList } = storeToRefs(menuStore);
+const { menuList, notificationList } = storeToRefs(menuStore);
 const { changeMenuState, fetchMenuItems } = menuStore;
 
 const { userLogout } = memberStore;
+//알림 드랍다운 START
+
+const URL = import.meta.env.VITE_BASE_URL;
+const dropdownOpen = ref(false);
+
+const isDropdownOpen = computed( () => {
+  return dropdownOpen.value;
+})
+
+const computedNotificationList = computed(()=>{
+  return notificationList.value;
+})
+
+const showToggleDropdown = () => {
+  dropdownOpen.value = true;
+}
+
+const hideToggleDropdown = () => {
+  dropdownOpen.value = false;
+}
+
+const readNotification = (notificationId) => {
+  axios.post(`${URL}/notifications/read/${notificationId}`)
+  .then(response => {
+    const index = notificationList.value.findIndex(
+        notification => notification.notificationId === notificationId);
+    notificationList.value.splice(index, 1);
+      }
+  )
+}
+//알림 드랍다운 END
 
 const logout = () => {
   userLogout();
@@ -143,7 +175,7 @@ onMounted(() => {
                 <span class="absolute -inset-1.5" />
                 <span class="sr-only">Open user menu</span>
                 <!-- TODO: 이거 갈아 끼워야 됨 프로필 이미지 -->
-                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                <img :class="['h-8 w-8 rounded-full', computedNotificationList.length > 0 ? 'border-2 border-red-500' : '']" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
               </MenuButton>
             </div>
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
@@ -155,8 +187,18 @@ onMounted(() => {
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">Settings</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">알림</a>
+                  <p :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" @mouseover="showToggleDropdown">
+                    알림 <span class="bg-red-500 text-white font-bold rounded-full px-1.5 py-0.5 ml-1">{{computedNotificationList.length}}</span>
+                  </p>
+
                 </MenuItem>
+                <div v-if="isDropdownOpen" class="dropdown-menu" @mouseleave="hideToggleDropdown">
+                  <ul>
+                    <li v-for="(notification, index) in computedNotificationList" :key="notification.notificationId" @click="readNotification(notification.notificationId)">
+                      {{index+1}}. {{ notification.content }}
+                    </li>
+                  </ul>
+                </div>
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">로그아웃</a>
                 </MenuItem>
@@ -184,5 +226,28 @@ onMounted(() => {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
+}
+.dropdown-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  z-index: 11;
+  margin-top: 10px;
+}
+.dropdown-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 11;
+}
+.dropdown-menu li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  z-index: 11;
+}
+.dropdown-menu li:last-child {
+  border-bottom: none;
 }
 </style>
