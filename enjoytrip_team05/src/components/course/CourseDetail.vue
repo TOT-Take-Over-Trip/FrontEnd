@@ -31,11 +31,11 @@ const onLoadKakaoMap = (mapRef) => {
 // 검색 키워드
 const searchContent = ref('')
 const searchedData = ref({});
-const coordinate = {
+const coordinate = ref({
   // TODO: 현재 위치 지정하는게 제일 좋을듯
   lat: 37.566826,
   lng: 126.9786567
-};
+});
 
 // project base url
 const URL = import.meta.env.VITE_BASE_URL;
@@ -255,6 +255,8 @@ onMounted(async () => {
         course.value = response.data;
         console.log("course:", course.value.memberId);
         console.log("memberId:", memberId);
+        coordinate.value.lat = course.value.coursePlaces[0].place.latitude;
+        coordinate.value.lng = course.value.coursePlaces[0].place.longitude;
         coursePlaces.value = course.value.coursePlaces.map(coursePlace => {
           return {
             ...coursePlace,
