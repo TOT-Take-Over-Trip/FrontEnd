@@ -59,30 +59,35 @@ const router = createRouter({
       // 게시판 router
       path: "/board",
       name: "board",
+      beforeEnter: onlyAuthUser,
       component: TheBoardView,
     },
     {
       //게시판 상세정보 router
       path: '/board/:postId',
       name: 'boardDetail',
+      beforeEnter: onlyAuthUser,
       component: () => import("@/components/board/BoardDetail.vue"),
     },
     {
       // 코스 router
       path: "/course",
       name: "course",
+      beforeEnter: onlyAuthUser,
       component: TheCourseView,
     },
     {
       // 코스 router
       path: "/myCourse",
       name: "myCourse",
+      beforeEnter: onlyAuthUser,
       component: TheMyCourseView,
     },
     {
       // 코스 상세정보 router
       path: "/course/:courseId",
       name: "courseDetail",
+      beforeEnter: onlyAuthUser,
       component: () => import("@/components/course/CourseDetail.vue"),
     },
     {
@@ -96,6 +101,7 @@ const router = createRouter({
       // 상점 router
       path: "/shop",
       name: "shop",
+      beforeEnter: onlyAuthUser,
       component: TheItemView,
     },
     {
@@ -123,6 +129,7 @@ const router = createRouter({
       //아이템 상세정보 router
       path: '/item/:itemId',
       name: 'itemDetail',
+      beforeEnter: onlyAuthUser,
       component: () => import("@/components/item/ItemDetail.vue"),
     },
     {
