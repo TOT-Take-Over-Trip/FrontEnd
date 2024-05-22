@@ -88,7 +88,7 @@ const navigation = [
       },
       {
         value: '내 코스 보기',
-        name: 'board',
+        name: 'myCourse',
       },
       {
         value: '코스 등록',

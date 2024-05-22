@@ -10,6 +10,7 @@ import TheCourseView from "@/views/course/TheCourseView.vue";
 import {storeToRefs} from "pinia";
 import { useMemberStore } from "@/stores/member";
 import {useMenuStore} from "@/stores/menu.js";
+import TheMyCourseView from "@/views/course/TheMyCourseView.vue";
 
 const onlyAuthUser = async (to, from, next) => {
   const memberStore = useMemberStore();
@@ -67,15 +68,16 @@ const router = createRouter({
       component: () => import("@/components/board/BoardDetail.vue"),
     },
     {
-      path: '/board/members/:memberId',
-      name: 'boardMyList',
-      component: () => import("@/components/board/BoardMyList.vue"),
-    },
-    {
       // 코스 router
       path: "/course",
       name: "course",
       component: TheCourseView,
+    },
+    {
+      // 코스 router
+      path: "/myCourse",
+      name: "myCourse",
+      component: TheMyCourseView,
     },
     {
       // 코스 상세정보 router

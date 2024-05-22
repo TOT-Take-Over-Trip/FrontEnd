@@ -6,7 +6,7 @@ import draggable from "vuedraggable";
 import VButton from "@/components/VButton.vue";
 import {jwtDecode} from "jwt-decode";
 
-
+const courseId = -1;
 const markerList = ref([]);
 const token = sessionStorage.getItem("accessToken");
 const decodeToken = jwtDecode(token);
@@ -168,8 +168,9 @@ const updateCourse = () => {
     }
     data.coursePlaces.push(coursePlaceData);
   }
+  console.log("data: ", data);
 
-  axios.put(`${URL}/courses/6`, data, {
+  axios.post(`${URL}/courses`, data, {
     headers: {
       'Content-Type': 'application/json',
     }
@@ -212,7 +213,7 @@ const addCourse = (marker) => {
     },
     coursePlaceId: ++coursePlaceId,
     content: "",
-    courseId: coursePlaces.value[0].courseId,     // TODO: props 로 courseId 받아와서 대체 해야됨
+    courseId: courseId,     // TODO: props 로 courseId 받아와서 대체 해야됨
     placeId: marker.infoWindow.placeId,
     sequence: coursePlaces.value.length,
     show: false,
@@ -240,21 +241,21 @@ const updateTitle = (event) => {
 
 
 onMounted(async () => {
-  // TODO: courseId 랑 memberId props 로 받아와야 함
-  await axios.get(`${URL}/courses/6?memberId=2`)
-  .then((response) => {
-    course.value = response.data;
-    coursePlaces.value = course.value.coursePlaces.map(coursePlace => {
-      return {
-        ...coursePlace,
-        show: false,
-      };
-    });
-    removeQuotesFromPlaceFields(coursePlaces.value)
-  })
-  .catch((error) => {
-    console.error("Single course error: ", error);
-  })
+  // // TODO: courseId 랑 memberId props 로 받아와야 함
+  // await axios.get(`${URL}/courses/6?memberId=2`)
+  // .then((response) => {
+  //   course.value = response.data;
+  //   coursePlaces.value = course.value.coursePlaces.map(coursePlace => {
+  //     return {
+  //       ...coursePlace,
+  //       show: false,
+  //     };
+  //   });
+  //   removeQuotesFromPlaceFields(coursePlaces.value)
+  // })
+  // .catch((error) => {
+  //   console.error("Single course error: ", error);
+  // })
 })
 
 </script>
@@ -276,20 +277,25 @@ onMounted(async () => {
     </div>
   </div>
   <div class="flex">
-    <div class="w-3/12 border-2 mx-1 rounded-xl shadow-inner">
-      <!-- v-model로 데이터 배열 상태로 저장 -->
-      <draggable v-model="coursePlaces" itemKey="id" class="list-group">
-        <template #item="{ element }">
-          <div
-              class="draggable-item shadow-lg flex h-28 items-center justify-between text-2xl my-2 mx-2 rounded-xl bg-sky-50">
-            <div class="flex flex-col" @click="movePointer(element)" >
-              <div class="my-2">{{ element.place.name }}</div>
-              <div class="text-sm my-2">{{ element.content }}</div>
+    <div class="w-3/12 flex flex-col">
+      <div class="mx-2 h-12">
+        <input class="px-2" v-model="course.content" style="width: 100%; height: 100%;" type="text" placeholder="코스의 설명을 간단하게 작성해주세요."/>
+      </div>
+      <div class="border-2 mx-1 rounded-xl shadow-inner">
+        <!-- v-model로 데이터 배열 상태로 저장 -->
+        <draggable v-model="coursePlaces" itemKey="id" class="list-group">
+          <template #item="{ element }">
+            <div
+                class="draggable-item shadow-lg flex h-28 items-center justify-between text-2xl my-2 mx-2 rounded-xl bg-sky-50">
+              <div class="flex flex-col" @click="movePointer(element)" >
+                <div class="my-2">{{ element.place.name }}</div>
+                <div class="text-sm my-2">{{ element.content }}</div>
+              </div>
+              <VButton class="text-xl" @click="removeItem(element)">삭제</VButton>
             </div>
-            <VButton class="text-xl" @click="removeItem(element)">삭제</VButton>
-          </div>
-        </template>
-      </draggable>
+          </template>
+        </draggable>
+      </div>
     </div>
     <div :class=mapWidth>
       <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" @onLoadKakaoMap="onLoadKakaoMap" :draggable="true" style="width: 100%; height: 100vh;">

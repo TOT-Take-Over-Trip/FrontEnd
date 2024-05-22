@@ -1,48 +1,54 @@
 <script setup>
-import { computed } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 
 const props = defineProps({
   course: Object,
 });
 
-// const imageUrl = computed(() => {
-//   if (props.item.itemImg) {
-//     // console.log(props.post.thumbnail)
-//     return `data:image/jpeg;base64,${(props.item.itemImg)}`;
-//   }
-//   return null;
-// });
+const showMore = ref(false);
+const maxVisiblePlaces = ref(3);
+
+const toggleShowMore = () => {
+  showMore.value = !showMore.value;
+};
+
+const visiblePlaces = computed(() => {
+  return showMore.value ? props.course.coursePlaces : props.course.coursePlaces.slice(0, maxVisiblePlaces.value);
+});
 
 const contentClass = computed(() => {
   // return props.item.itemImg ? 'w-10/12' : 'w-full';
   return 'w-full';
 });
-//
-// const itemPrice = computed(() =>{
-//   return props.item.price.toLocaleString();
-// })
+
+
 </script>
 
 <template>
-  <div class="container mx-auto flex h-64 mt-3 border-y-2">
+  <div class="container mx-auto flex h-72 mt-3 border-y-2">
     <!--  제목 + contents   -->
-    <div>
+    <div :class="contentClass + ' flex flex-col mt-4'" style="height: 100%;">
+      <!--   제목 + 작성 날짜 묶음 START   -->
       <div>
-        <!--   제목   -->
-        <div class="text-3xl">제목: {{ course.title }}</div>
-        <!--   내용  -->
-        <div class="text-3xl">내용: {{ course.content }}</div>
-        <div v-for="(coursePlace,index) in course.coursePlaces":key="coursePlace.courseId">
-          {{index + 1}}번째 장소 : {{coursePlace.content}}
-        </div>
-
+        <!--   제목 START  -->
+        <div class="text-3xl">{{ course.title }}</div>
+        <!--   제목 END  -->
+        <!--   작성 날짜 START  -->
+        <div class="text-xl mt-2 mb-4">{{ course.createdDate }}</div>
+        <!--   작성 날짜 END  -->
       </div>
       <!--   제목 + 작성 날짜 묶음 END   -->
-
+      <!--   내용  -->
+      <div class="text-2xl mt-2 mb-4">{{ course.content }}</div>
+      <div class="flex flex-col justify-between">
+        <div v-for="(coursePlace, index) in visiblePlaces" :key="coursePlace.courseId" class="mb-1">
+          {{ index + 1 }}번째 코스 ({{coursePlace.place.name}}) : {{ coursePlace.content }}
+        </div>
+      </div>
     </div>
     <!--  img 그림  -->
-<!--    <div class="w-2/12 mt-3" style="height: 100%" v-if="props.item.itemImg != null">-->
-<!--      <img :src="imageUrl" style="height: 90%" alt="Item Image"/>-->
+<!--    <div class="w-2/12 mt-3" style="height: 100%" v-if="props.post.thumbnail != null">-->
+<!--      <img :src="imageUrl" style="height: 90%" alt="Post Thumbnail"/>-->
 <!--      &lt;!&ndash;      <img src="/src/assets/img/test/testImg.jpeg" style="height: 90%" alt="Post Thumbnail"/>&ndash;&gt;-->
 <!--    </div>-->
   </div>
