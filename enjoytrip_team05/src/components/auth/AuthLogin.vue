@@ -10,9 +10,11 @@ import {useRouter} from "vue-router";
 const router = useRouter()
 
 const memberStore = useMemberStore()
+const menuStore = useMenuStore();
 
 const { isLogin, isLoginError } = storeToRefs(memberStore)
 const { userLogin, getUserInfo } = memberStore
+const { fetchMenuItems } = menuStore;
 const { changeMenuState } = useMenuStore()
 const URL = import.meta.env.VITE_BASE_URL;
 const loginUser = ref({
@@ -30,6 +32,7 @@ const login = async () => {
   if (isLogin.value) {
     getUserInfo(token)
     changeMenuState()
+    fetchMenuItems();
     router.replace("/")
   } else {
     loginErrorMessage.value = "아이디와 비밀번호를 다시 확인해주세요.";

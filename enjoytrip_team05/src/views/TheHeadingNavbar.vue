@@ -12,7 +12,7 @@ const memberStore = useMemberStore();
 // 반응형을 유지하면서 스토어에서 속성을 추출하려면, storeToRefs()를 사용
 // https://pinia.vuejs.kr/core-concepts/
 const { menuList } = storeToRefs(menuStore);
-const { changeMenuState } = menuStore;
+const { changeMenuState, fetchMenuItems } = menuStore;
 
 const { userLogout } = memberStore;
 
@@ -79,6 +79,9 @@ const handleMouseLeave = () => {
 
 onMounted(() => {
   changeMenuState();
+  if(sessionStorage.getItem("accessToken")) {
+    fetchMenuItems();
+  }
 });
 
 </script>
@@ -150,6 +153,9 @@ onMounted(() => {
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">Settings</a>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">알림</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">로그아웃</a>
