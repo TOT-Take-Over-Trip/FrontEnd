@@ -25,13 +25,16 @@ const post = ref({});
 const comments = ref([]);
 const newComment = ref("");
 
+const token = sessionStorage.getItem("accessToken");
+const decodeToken = jwtDecode(token);
+const loginId = decodeToken.sub;
+const memberId = sessionStorage.getItem("memberId");
 
-// TODO: 유저정보 바꿔줘야 함
 const submitComment = async () => {
   const data = {
     postId : post.value.postId,
-    memberId : 1,
-    memberName : "익명의 유저",
+    memberId : memberId,
+    memberName : loginId,
     content : newComment.value,
   }
   await axios.post(`${URL}/posts/comments/new`, data)
@@ -40,13 +43,6 @@ const submitComment = async () => {
     newComment.value = "";
   })
 };
-
-const token = sessionStorage.getItem("accessToken");
-const decodeToken = jwtDecode(token);
-const loginId = decodeToken.sub; //TODO: 현재 로그인 유저로 바꿔줘야 함
-const memberId = sessionStorage.getItem("memberId");
-console.log("decodeToken: ", decodeToken);
-console.log("loginId: ", loginId);
 
 // console.log(route.params.postId);
 onMounted(async () => {
