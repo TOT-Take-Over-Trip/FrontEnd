@@ -134,8 +134,7 @@ onMounted(() => {
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex flex-shrink-0 items-center">
             <RouterLink :to="{name: 'main'}">
-              <!--    TODO: 여기에 로고 이미지 넣으면 됨          -->
-              <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
+              <img class="h-8 w-auto" src="/src/assets/img/logo.png" alt="logo img" />
             </RouterLink>
           </div>
           <div class="hidden sm:ml-6 sm:block">
