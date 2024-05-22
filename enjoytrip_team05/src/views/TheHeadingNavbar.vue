@@ -194,8 +194,12 @@ onMounted(() => {
                 </MenuItem>
                 <div v-if="isDropdownOpen" class="dropdown-menu" @mouseleave="hideToggleDropdown">
                   <ul>
-                    <li v-for="(notification, index) in computedNotificationList" :key="notification.notificationId" @click="readNotification(notification.notificationId)">
-                      {{index+1}}. {{ notification.content }}
+                    <li v-for="(notification, index) in computedNotificationList" :key="notification.notificationId">
+                      <div v-html="'<span>' + (index+1) + '. ' + notification.content + '</span>'"></div>
+                      <hr style="margin-top: 10px; margin-bottom: 10px;">
+                      <div style="text-align: center;">
+                        <button @click="readNotification(notification.notificationId)">읽기</button>
+                      </div>
                     </li>
                   </ul>
                 </div>

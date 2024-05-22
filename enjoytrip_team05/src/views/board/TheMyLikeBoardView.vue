@@ -9,6 +9,7 @@ import 'swiper/css';
 import BoardContent from "@/components/board/BoardContent.vue";
 import VButton from "@/components/VButton.vue";
 import VSelect from "@/components/VSelect.vue";
+import {jwtDecode} from "jwt-decode";
 
 
 // posts => 전체 포스트
@@ -33,7 +34,10 @@ function searchPosts() {
 }
 
 const URL = import.meta.env.VITE_BASE_URL;
-const memberId = 1;
+const token = sessionStorage.getItem("accessToken");
+const decodeToken = jwtDecode(token);
+const memberName = decodeToken.sub;
+const memberId = sessionStorage.getItem("memberId");
 const fetchPosts = async () => {
   try {
     const response = await axios.get(`${URL}/posts/like/members?memberId=${memberId}`);

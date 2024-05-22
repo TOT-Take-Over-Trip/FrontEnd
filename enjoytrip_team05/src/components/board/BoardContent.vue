@@ -1,5 +1,7 @@
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
+import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 
 const props = defineProps({
   post: Object,
@@ -28,6 +30,25 @@ const truncatedContent = computed(() => {
 const contentClass = computed(() => {
   return props.post.thumbnail ? 'w-10/12' : 'w-full';
 });
+
+const token = sessionStorage.getItem("accessToken");
+const decodeToken = jwtDecode(token);
+const memberName = decodeToken.sub;
+const memberId = sessionStorage.getItem("memberId");
+const URL = import.meta.env.VITE_BASE_URL;
+const likePost = (postId) => {
+  if(isLiked.value) {
+    axios.post(`${URL}/posts/${postId}/unlike?memberId=${memberId}`).then(console.log("좋아요 취소"))
+  }else{
+    axios.post(`${URL}/posts/${postId}/like?memberId=${memberId}`).then(console.log("좋아요 성공!"))
+  }
+  isLiked.value = !isLiked.value;
+}
+
+const isLiked = ref(props.post.like) // 좋아요 상태를 나타내는 boolean 값
+console.log(props.post.like)
+const likedImageUrl = 'src/assets/img/like.png'; // 좋아요 상태일 때의 이미지 URL
+const unlikedImageUrl = 'src/assets/img/non-like.png'; // 좋아요 상태가 아닐 때의 이미지 URL
 </script>
 
 <template>
@@ -36,8 +57,13 @@ const contentClass = computed(() => {
     <div :class="contentClass + ' flex flex-col mt-4'" style="height: 100%;">
       <!--   제목 + 작성 날짜 묶음 START   -->
       <div>
+        <button @click.stop.prevent="likePost(post.postId)" class="like-button">
+          <img :src="isLiked ? likedImageUrl : unlikedImageUrl" alt="Like Button" style="width: 2rem; height: 2rem;" />
+        </button>
         <!--   제목 START  -->
         <div class="text-3xl">{{ post.title }}</div>
+        <!-- 좋아요 버튼 START -->
+        <!-- 좋아요 버튼 END -->
         <!--   제목 END  -->
         <!--   작성 날짜 START  -->
         <div class="text-xl mt-2 mb-4">{{ post.createdDate }}</div>
@@ -58,7 +84,14 @@ const contentClass = computed(() => {
 
 <style scoped>
 img {
+  width:100%;
+  height:100%;
   max-width: 100%;
-  height: auto;
+}
+.like-button {
+  color: #ffffff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
 }
 </style>
