@@ -5,6 +5,9 @@ import { KakaoMap, KakaoMapMarker, KakaoMapCustomOverlay, KakaoMapMarkerPolyline
 import draggable from "vuedraggable";
 import VButton from "@/components/VButton.vue";
 import {jwtDecode} from "jwt-decode";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const courseId = -1;
 const markerList = ref([]);
@@ -175,6 +178,7 @@ const updateCourse = () => {
       'Content-Type': 'application/json',
     }
   })
+  router.replace({name: "course"})
 }
 
 const registCoursePlace = () => {
