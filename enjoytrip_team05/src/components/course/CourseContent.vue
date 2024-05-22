@@ -1,5 +1,7 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue';
+import {jwtDecode} from "jwt-decode";
+import axios from "axios";
 
 const props = defineProps({
   course: Object,
@@ -21,6 +23,34 @@ const contentClass = computed(() => {
   return 'w-full';
 });
 
+/*좋아요 로직 Start*/
+const token = sessionStorage.getItem("accessToken");
+const decodeToken = jwtDecode(token);
+const memberName = decodeToken.sub;
+const memberId = sessionStorage.getItem("memberId");
+const URL = import.meta.env.VITE_BASE_URL;
+const isLiked = ref(props.course.like) // 좋아요 상태를 나타내는 boolean 값
+const likedImageUrl = 'src/assets/img/like.png'; // 좋아요 상태일 때의 이미지 URL
+const unlikedImageUrl = 'src/assets/img/non-like.png'; // 좋아요 상태가 아닐 때의 이미지 URL
+const courseLikeCount = ref(props.course.courseLikeCount)
+
+const likeCourse = (courseId) => {
+  if(isLiked.value) {
+    axios.post(`${URL}/courses/${courseId}/unlike?memberId=${memberId}`).then(console.log("좋아요 취소"))
+    courseLikeCount.value-=1;
+  }else{
+    axios.post(`${URL}/courses/${courseId}/like?memberId=${memberId}`).then(console.log("좋아요 성공!"))
+    courseLikeCount.value+=1;
+  }
+  isLiked.value = !isLiked.value;
+}
+
+const likeCount = computed(()=>{
+  return courseLikeCount.value;
+})
+/*좋아요 로직 End*/
+
+
 
 </script>
 
@@ -30,6 +60,10 @@ const contentClass = computed(() => {
     <div :class="contentClass + ' flex flex-col mt-4'" style="height: 100%;">
       <!--   제목 + 작성 날짜 묶음 START   -->
       <div>
+        <button @click.stop.prevent="likeCourse(course.courseId)" class="like-button">
+          <img :src="isLiked ? likedImageUrl : unlikedImageUrl" alt="Like Button" style="width: 2rem; height: 2rem;" />
+        </button>
+        {{likeCount}}
         <!--   제목 START  -->
         <div class="text-3xl">{{ course.title }}</div>
         <!--   제목 END  -->
