@@ -179,6 +179,13 @@ const updateCourse = () => {
   router.replace({name: "course"});
 }
 
+// 코스 삭제하기
+const deleteCourse = () => {
+
+  axios.post(`${URL}/courses/delete/${route.params.courseId}`);
+  router.replace({name: "course"});
+}
+
 const registCoursePlace = () => {
   clickRegisterBtn.value = false;
   for (let marker of markerList.value) {
@@ -280,7 +287,8 @@ onMounted(async () => {
                v-model="searchContent">
         <img src="/src/assets/img/searchIcon.png" @click="searchPlace" class="mx-3" style="height: 49%"
              alt="searchIcon"/>
-        <VButton v-if="memberId == course.memberId" @click="updateCourse">등록</VButton>
+        <VButton class="me-4" v-if="memberId == course.memberId" @click="updateCourse">등록</VButton>
+        <button v-if="memberId == course.memberId" class="bg-transparent hover:bg-red-400 text-red-400 font-semibold hover:text-white py-2 px-4 border border-red-400 hover:border-transparent rounded" @click="deleteCourse">삭제</button>
       </div>
     </div>
   </div>

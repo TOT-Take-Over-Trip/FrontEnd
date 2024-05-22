@@ -162,7 +162,12 @@ const router = createRouter({
       beforeEnter: removeSessionItem,
       component: TheMainView,
     },
-  ]
+  ],
 })
+// beforeEach 훅을 사용하여 라우트 전환 시 스크롤 최상단으로 이동
+router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0);
+  next();
+});
 
 export default router
