@@ -31,24 +31,31 @@ const contentClass = computed(() => {
   return props.post.thumbnail ? 'w-10/12' : 'w-full';
 });
 
+const URL = import.meta.env.VITE_BASE_URL;
 const token = sessionStorage.getItem("accessToken");
 const decodeToken = jwtDecode(token);
 const memberName = decodeToken.sub;
 const memberId = sessionStorage.getItem("memberId");
-const URL = import.meta.env.VITE_BASE_URL;
+const postLikeCount = ref(props.post.postLikeCount)
+const isLiked = ref(props.post.like) // 좋아요 상태를 나타내는 boolean 값
+const likedImageUrl = 'src/assets/img/like.png'; // 좋아요 상태일 때의 이미지 URL
+const unlikedImageUrl = 'src/assets/img/non-like.png'; // 좋아요 상태가 아닐 때의 이미지 URL
+
 const likePost = (postId) => {
   if(isLiked.value) {
     axios.post(`${URL}/posts/${postId}/unlike?memberId=${memberId}`).then(console.log("좋아요 취소"))
+    postLikeCount.value-=1;
   }else{
     axios.post(`${URL}/posts/${postId}/like?memberId=${memberId}`).then(console.log("좋아요 성공!"))
+    postLikeCount.value+=1;
   }
   isLiked.value = !isLiked.value;
 }
 
-const isLiked = ref(props.post.like) // 좋아요 상태를 나타내는 boolean 값
-console.log(props.post.like)
-const likedImageUrl = 'src/assets/img/like.png'; // 좋아요 상태일 때의 이미지 URL
-const unlikedImageUrl = 'src/assets/img/non-like.png'; // 좋아요 상태가 아닐 때의 이미지 URL
+const likeCount = computed(()=>{
+  return postLikeCount.value;
+})
+
 </script>
 
 <template>
@@ -60,6 +67,7 @@ const unlikedImageUrl = 'src/assets/img/non-like.png'; // 좋아요 상태가 �
         <button @click.stop.prevent="likePost(post.postId)" class="like-button">
           <img :src="isLiked ? likedImageUrl : unlikedImageUrl" alt="Like Button" style="width: 2rem; height: 2rem;" />
         </button>
+        {{likeCount}} Like
         <!--   제목 START  -->
         <div class="text-3xl">{{ post.title }}</div>
         <!-- 좋아요 버튼 START -->
