@@ -18,8 +18,9 @@ export const useMenuStore = defineStore("menuStore", () => {
             let memberId = sessionStorage.getItem("memberId");
             const userResponse = await axios.get(`${URL}/members/${memberId}`); //유저 정보 조회
             const point = userResponse.data.point;
-            if(menuList.value.length<5) {
-                menuList.value.push({name: "Point: " + point, show: true});
+            if(menuList.value.length<6) {
+                menuList.value.push({name: point.toLocaleString() + "P", show: true});
+                menuList.value.push({name: userResponse.data.name + "님", show: true});
             }
 
             const notificationResponse = await axios.get(`${URL}/notifications?memberId=${memberId}`); //유저 알림 목록 조회
