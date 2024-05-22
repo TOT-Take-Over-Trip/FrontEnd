@@ -183,6 +183,7 @@ const updateCourse = () => {
 
 const registCoursePlace = () => {
   clickRegisterBtn.value = false;
+  console.log("markerList: ", markerList.value);
   for (let marker of markerList.value) {
     marker.infoWindow.visible = false;
   }
@@ -308,7 +309,6 @@ onMounted(async () => {
         <!--   마커 등록     -->
         <KakaoMapMarker v-for="(coursePlace, index) in coursePlaceMarker"
                           @onClickKakaoMapMarker="showOverlay(coursePlace)"
-                          :key="course.coursePlaces.coursePlaceId"
                           :lat="coursePlace.place.latitude" :lng="coursePlace.place.longitude" :draggable="false" :clickable="true">
         </KakaoMapMarker>
 
