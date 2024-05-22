@@ -270,6 +270,31 @@ onMounted(async () => {
       })
 })
 
+const userPoint = ref(0);
+const takeOver = async () =>{
+  await axios.get(`${URL}/members/${memberId}`).then((response)=>{
+    userPoint.value = response.data.point;
+  })
+  console.log("구매자 포인트", userPoint.value)
+  console.log("인수에 필요한 포인트", coursePrice.value);
+
+  if(coursePrice.value<=userPoint.value) {
+    await axios.post(`${URL}/courses/takeover/${route.params.courseId}?memberId=${memberId}`).then(
+        (response) => {
+          router.push({name: 'myCourse'})
+        })
+    console.log("인수 성공!!")
+  }
+  else{
+    alert("point가 부족합니다.")
+  }
+}
+
+const coursePrice = computed( () =>{
+  const likeCount = course.value.courseLikeCount;
+  const hit = course.value.hit;
+  return (likeCount*10+hit);
+})
 </script>
 
 <template>
@@ -314,8 +339,11 @@ onMounted(async () => {
             </div>
           </template>
         </draggable>
+      <!--인수버튼 START-->
       </div>
+      <VButton class="text-xl h-28" @click="takeOver">{{coursePrice.toLocaleString()}}P로 인수하기</VButton>
     </div>
+    <!--인수버튼 END-->
     <div :class=mapWidth>
       <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" @onLoadKakaoMap="onLoadKakaoMap" :draggable="true"
                 style="width: 100%; height: 100vh;">
