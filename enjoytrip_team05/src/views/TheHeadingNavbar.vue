@@ -44,7 +44,9 @@ const showToggleDropdown = () => {
 const hideToggleDropdown = () => {
   dropdownOpen.value = false;
 }
-
+const isDropDownOpen = computed(() => {
+  return dropdownOpen.value;
+})
 const readNotification = (notificationId) => {
   axios.post(`${URL}/notifications/read/${notificationId}`)
   .then(response => {
@@ -202,12 +204,11 @@ onMounted(() => {
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">Settings</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <p :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" @mouseover="showToggleDropdown">
+                  <p :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" @mouseover="showToggleDropdown" @mouseleave="hideToggleDropdown">
                     알림 <span class="bg-red-500 text-white font-bold rounded-full px-1.5 py-0.5 ml-1">{{computedNotificationList.length}}</span>
                   </p>
-
                 </MenuItem>
-                <div v-if="isDropdownOpen" class="dropdown-menu" @mouseleave="hideToggleDropdown">
+                <div v-if="isDropdownOpen && computedNotificationList.length > 0" class="dropdown-menu" >
                   <ul>
                     <li v-for="(notification, index) in computedNotificationList" :key="notification.notificationId">
                       <div v-html="'<span>' + (index+1) + '. ' + notification.content + '</span>'"></div>
