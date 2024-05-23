@@ -143,7 +143,7 @@ const router = createRouter({
     {
       path: '/auth/join',
       name: 'join',
-      component: () => import("@/components/auth/AuthLogin.vue"),
+      component: () => import("@/components/auth/AuthSignup.vue"),
     },
     {
       path: '/auth/login',
