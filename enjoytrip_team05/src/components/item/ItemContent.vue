@@ -50,8 +50,14 @@ const exchangeItem = () => {
       memberId: memberInfo.memberId,
       quantity: 1,
     }
+  })
+  Swal.fire({
+    icon: 'success',
+    title: '상품 구매 완료',
+    text: '상품을 구매했어요.',
+  }).then(() => {
+    window.location.reload();
   });
-  window.location.reload();
 }
 
 onMounted(() => {
