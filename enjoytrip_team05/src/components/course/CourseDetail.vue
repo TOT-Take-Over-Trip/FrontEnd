@@ -335,7 +335,7 @@ const coursePrice = computed( () =>{
                 <div class="my-2">{{ element.place.name }}</div>
                 <div class="text-sm my-2">{{ element.content }}</div>
               </div>
-              <VButton class="text-xl" @click="removeItem(element)">삭제</VButton>
+              <VButton v-if="memberId == course.memberId" class="text-xl" @click="removeItem(element)">삭제</VButton>
             </div>
           </template>
         </draggable>
