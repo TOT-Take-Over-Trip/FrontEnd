@@ -7,16 +7,17 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 
 // Import Swiper styles
 import 'swiper/css';
-import VBoardCard from "@/components/board/BoardCard.vue";
+import VCourseCard from "@/components/course/CourseCard.vue";
 import CourseContent from "@/components/course/CourseContent.vue";
 import VButton from "@/components/VButton.vue";
 import VSelect from "@/components/VSelect.vue";
 import {jwtDecode} from "jwt-decode";
 
 
-// posts => 전체 포스트
-// topRankPosts => 상위 10개 post
+// course => 전체 코스
+// topRankcourses => 상위 10개 post
 const courses = ref([]);
+const topRankCourses = ref([]);
 const filteredCourses = ref([]);
 
 const searchCondition = ref('제목');
@@ -35,7 +36,6 @@ function searchPosts() {
   console.log(filteredCourses);
 }
 
-const topRankPosts = ref([]);
 const URL = import.meta.env.VITE_BASE_URL;
 const token = sessionStorage.getItem("accessToken");
 const decodeToken = jwtDecode(token);
@@ -45,9 +45,8 @@ const fetchCourses = async () => {
   try {
     const response = await axios.get(`${URL}/courses?memberId=${memberId}`);
     console.log("response: ", response);
-    courses.value = response.data;
-    console.log(courses.value)
-    // topRankPosts.value = response.data.topRankPosts;
+    courses.value = response.data.courses;
+    topRankCourses.value = response.data.topRankCourses;
   } catch (error) {
     console.error("Error fetching courses:", error);
   }
@@ -72,6 +71,11 @@ onMounted(() => {
   fetchCourses();
 })
 
+const inputValue = ref('')
+const changeKeyword = (event) =>{
+  console.log(event.target.value);
+  searchContent.value = event.target.value
+}
 </script>
 
 <template>
@@ -90,9 +94,9 @@ onMounted(() => {
         }"
 
       >
-<!--        <swiper-slide v-for="(course) in courses" :key="courses.id">-->
-<!--          <VCourseCard class="rounded-xl" :course="courses" style="border: 1px solid #c0c0c0" />-->
-<!--        </swiper-slide>-->
+        <swiper-slide v-for="(course) in topRankCourses" :key="course.id">
+          <VCourseCard class="rounded-xl" :course="course" style="border: 1px solid #c0c0c0" />
+        </swiper-slide>
       </swiper>
     </div>
     <!-- swiper 부분 (게시글 title, content 적고 넘기는 용도) END -->
@@ -105,7 +109,7 @@ onMounted(() => {
         <div class="flex items-center justify-center w-2/3 h-24">
           <!--  TODO: 이거 필터 내용 어떤거 할건지?    -->
           <VSelect class="me-12 my-auto" style="height: 40%; width: 10%;" v-model="searchCondition" :options="options" />
-          <input type="text" class="text-xl border-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." v-model="searchContent" @keydown.enter="searchPosts">
+          <input type="text" class="text-xl border-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." @input="changeKeyword" @keyup.enter="searchPosts">
           <!--   TODO: 이거 검색할 때 일치하는 데이터 없으면 전체 랜더링 되는데 이거 해결해야 될듯       -->
           <img src="/src/assets/img/searchIcon.png" @click="searchPosts" class="mx-3" style="height: 49%" alt="searchIcon" />
           <RouterLink :to="{name: 'courseRegist'}">

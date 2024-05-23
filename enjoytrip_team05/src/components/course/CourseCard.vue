@@ -6,13 +6,15 @@ const props = defineProps({
   course: Object,
 });
 
-// const imageUrl = computed(() => {
-//   if (props.course.thumbnail) {
-//     // console.log(props.post.thumbnail)
-//     return `data:image/jpeg;base64,${(props.post.thumbnail)}`;
-//   }
-//   return null;
-// });
+const thumbnail = computed(()=>{
+  const coursePlaces = props.course.coursePlaces;
+  for(let i=0; i<coursePlaces.length; i++){
+    if(coursePlaces[i].place.thumbnail){
+      return coursePlaces[i].place.thumbnail;
+    }
+  }
+  return "src/assets/img/test/testImg.jpeg";
+})
 
 </script>
 
@@ -23,7 +25,7 @@ const props = defineProps({
     </div>
     <div class="img-container mx-auto">
       <!--  TODO: axios로 데이터 받아줘야 함    -->
-<!--      <img :src="imageUrl" class="rounded-xl" style="height: 100%; width: 100%" alt="thumbnail"/>-->
+      <img :src="thumbnail" class="rounded-xl" style="height: 100%; width: 100%" alt="thumbnail"/>
     </div>
 
   </div>

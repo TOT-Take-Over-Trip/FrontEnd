@@ -283,7 +283,7 @@ onMounted(async () => {
     <div class="flex justify-around items-center w-full ">
       <!--  검색 + 검색아이콘 + 필터 + 글쓰기 -->
       <div class="flex items-center justify-center w-2/3 h-24">
-        <input type="text" class="text-xl border-2 p-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." v-model="searchContent">
+        <input type="text" class="text-xl border-2 p-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요." v-model="searchContent" @keydown.enter="searchPlace">
         <img src="/src/assets/img/searchIcon.png" @click="searchPlace" class="mx-3" style="height: 49%" alt="searchIcon" />
         <VButton class="me-4" @click="updateCourse">등록</VButton>
         <button class="bg-transparent hover:bg-red-400 text-red-400 font-semibold hover:text-white py-2 px-4 border border-red-400 hover:border-transparent rounded" @click="deleteCourse">삭제</button>
