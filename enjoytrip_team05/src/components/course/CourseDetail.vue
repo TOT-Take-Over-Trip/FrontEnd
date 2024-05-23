@@ -311,7 +311,7 @@ const coursePrice = computed( () =>{
       <!--  검색 + 검색아이콘 + 필터 + 글쓰기 -->
       <div class="flex items-center justify-center w-2/3 h-24">
         <input type="text" class="text-xl border-2 p-2" style="width: 50%; height: 45%" placeholder="검색할 내용을 입력해주세요."
-               v-model="searchContent">
+               v-model="searchContent" @keydown.enter="searchPlace">
         <img src="/src/assets/img/searchIcon.png" @click="searchPlace" class="mx-3" style="height: 49%"
              alt="searchIcon"/>
         <VButton class="me-4" v-if="memberId == course.memberId" @click="updateCourse">등록</VButton>
@@ -341,7 +341,7 @@ const coursePrice = computed( () =>{
         </draggable>
       <!--인수버튼 START-->
       </div>
-      <VButton class="text-xl h-28" @click="takeOver">{{coursePrice.toLocaleString()}}P로 인수하기</VButton>
+      <VButton v-if="memberId != course.memberId" class="text-xl h-28" @click="takeOver">{{coursePrice.toLocaleString()}}P로 인수하기</VButton>
     </div>
     <!--인수버튼 END-->
     <div :class=mapWidth>

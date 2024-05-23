@@ -8,7 +8,7 @@ const props = defineProps({
 });
 
 const showMore = ref(false);
-const maxVisiblePlaces = ref(3);
+const maxVisiblePlaces = ref(4);
 
 const toggleShowMore = () => {
   showMore.value = !showMore.value;
@@ -50,6 +50,16 @@ const likeCount = computed(()=>{
 })
 /*좋아요 로직 End*/
 
+const thumbnail = computed(()=>{
+  const coursePlaces = props.course.coursePlaces;
+  for(let i=0; i<coursePlaces.length; i++){
+    if(coursePlaces[i].place.thumbnail){
+      return coursePlaces[i].place.thumbnail;
+    }
+  }
+  return "src/assets/img/test/testImg.jpeg";
+})
+
 
 
 </script>
@@ -57,18 +67,18 @@ const likeCount = computed(()=>{
 <template>
   <div class="container mx-auto flex h-72 mt-3 border-y-2">
     <!--  제목 + contents   -->
-    <div :class="contentClass + ' flex flex-col mt-4'" style="height: 100%;">
+    <div :class="contentClass + ' flex flex-col mt-4 w-10/12'" style="height: 100%;">
       <!--   제목 + 작성 날짜 묶음 START   -->
       <div>
+        <!--   제목 START  -->
+        <div class="text-3xl flex justify-center">{{ course.title }}</div>
+        <!--   제목 END  -->
         <button @click.stop.prevent="likeCourse(course.courseId)" class="like-button">
           <img :src="isLiked ? likedImageUrl : unlikedImageUrl" alt="Like Button" style="width: 2rem; height: 2rem;" />
         </button>
         {{likeCount}}
-        <!--   제목 START  -->
-        <div class="text-3xl">{{ course.title }}</div>
-        <!--   제목 END  -->
         <!--   작성 날짜 START  -->
-        <div class="text-xl mt-2 mb-4">{{ course.createdDate }}</div>
+<!--        <div class="text-xl mt-2 mb-4">{{ course.createdDate }}</div>-->
         <!--   작성 날짜 END  -->
       </div>
       <!--   제목 + 작성 날짜 묶음 END   -->
@@ -80,11 +90,11 @@ const likeCount = computed(()=>{
         </div>
       </div>
     </div>
-    <!--  img 그림  -->
-<!--    <div class="w-2/12 mt-3" style="height: 100%" v-if="props.post.thumbnail != null">-->
-<!--      <img :src="imageUrl" style="height: 90%" alt="Post Thumbnail"/>-->
-<!--      &lt;!&ndash;      <img src="/src/assets/img/test/testImg.jpeg" style="height: 90%" alt="Post Thumbnail"/>&ndash;&gt;-->
-<!--    </div>-->
+<!--      img 그림-->
+    <div class="w-1/12 mt-3 flex justify-end" style="height: 100%; width: 100%" v-if="thumbnail != null">
+      <img :src="thumbnail" style="height: 90%" alt="Post Thumbnail"/>
+      <!--      <img src="/src/assets/img/test/testImg.jpeg" style="height: 90%" alt="Post Thumbnail"/>-->
+    </div>
   </div>
 </template>
 
