@@ -1,14 +1,17 @@
 <script setup>
-import {computed, onMounted} from 'vue';
+import {computed, onMounted, ref} from 'vue';
+import axios from "axios";
 
 const props = defineProps({
   comment: Object,
   memberInfo: Object,
 });
+const URL = import.meta.env.VITE_BASE_URL;
+const commentUser = ref({});
 
 const profileImage = computed(() => {
-  if (props.memberInfo.profileImage) {
-    return `data:image/jpeg;base64,${props.memberInfo.profileImage}`;
+  if (commentUser.value.profileImage) {
+    return `data:image/jpeg;base64,${commentUser.value.profileImage}`;
   }
   return null;
 });
@@ -19,7 +22,11 @@ const deleteComment = () => {
 onMounted(() => {
   const dateSplit = props.comment.createdDate.split(':');
   props.comment.createdDate = dateSplit[0] + ':' + dateSplit[1];
-
+  axios.get(`${URL}/members/${props.comment.memberId}`)
+    .then((response) => {
+      commentUser.value = response.data;
+    })
+  console.log("comment: ", props.comment);
 });
 </script>
 
