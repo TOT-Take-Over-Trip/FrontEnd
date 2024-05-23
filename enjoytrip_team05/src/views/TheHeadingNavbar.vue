@@ -125,12 +125,9 @@ onMounted(() => {
     fetchMenuItems();
   }
   const memberId = sessionStorage.getItem("memberId")
-  console.log("memberID: ", memberId);
   axios.get(`${URL}/members/${memberId}`)
       .then((response) => {
-        console.log("mounted response: ", response);
         memberInfo.value = response.data;
-        console.log(memberInfo.value);
       })
 });
 

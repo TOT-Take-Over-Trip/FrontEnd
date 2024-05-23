@@ -152,9 +152,15 @@ const router = createRouter({
     },
     {
       path: '/auth/mypage',
+      name: 'checkUser',
+      beforeEnter: onlyAuthUser,
+      component: () => import("@/components/auth/AuthCheckUser.vue"),
+    },
+    {
+      path: '/auth/mypage/:memberId',
       name: 'mypage',
       beforeEnter: onlyAuthUser,
-      component: () => import("@/components/auth/AuthLogin.vue"),
+      component: () => import("@/components/auth/AuthMypage.vue"),
     },
     {
       path: '/',
