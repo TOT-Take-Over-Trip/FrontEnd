@@ -18,8 +18,8 @@ onMounted(() => {
       showLogo.value = true;
       setTimeout(() => {
         showButton.value = true;
-      }, 3000);
-    }, 2000);
+      }, 1000); // 기존 3000ms에서 1000ms로 변경
+    }, 1000); // 기존 2000ms에서 1000ms로 변경
   }, 1000);
 });
 
@@ -114,7 +114,7 @@ const navigateToLogin = () => {
   padding: 0 20px;
   font-weight: bold;
   opacity: 0;
-  animation: fadein 2s ease 4s forwards; /* 로고가 나타난 후에 텍스트가 나타나도록 애니메이션 조정 */
+  animation: fadein 2s ease 2s forwards; /* 로고가 나타난 후에 텍스트가 나타나도록 애니메이션 조정 */
   z-index: 2;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* 텍스트에 더 뚜렷한 그림자 추가 */
 }
@@ -122,7 +122,7 @@ const navigateToLogin = () => {
 .logo {
   max-width: 20%; /* 로고 크기를 줄이기 위해 max-width를 30%로 변경 */
   opacity: 0;
-  animation: fadein 3s ease 3s forwards;
+  animation: fadein 3s ease 1s forwards; /* 애니메이션 시작 시간을 1초로 조정 */
   z-index: 2;
 }
 
@@ -132,7 +132,7 @@ const navigateToLogin = () => {
   font-size: 1.5rem;
   cursor: pointer;
   opacity: 0;
-  animation: fadein 2s ease 6s forwards;
+  animation: fadein 2s ease 2s forwards; /* 애니메이션 시작 시간을 4초로 조정 */
   z-index: 2;
   border: none;
   background-color: #fff;
