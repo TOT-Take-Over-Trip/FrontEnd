@@ -33,7 +33,7 @@ const login = async () => {
     getUserInfo(token)
     changeMenuState()
     fetchMenuItems();
-    router.replace("/")
+    router.replace("/").then(() => window.location.reload());
   } else {
     loginErrorMessage.value = "아이디와 비밀번호를 다시 확인해주세요.";
   }
@@ -71,7 +71,7 @@ const login = async () => {
               type="submit"
               class="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
           >
-            Login
+            로그인
           </button>
         </div>
       </form>

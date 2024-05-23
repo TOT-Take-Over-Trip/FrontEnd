@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
+import Swal from "sweetalert2";
 
 const router = useRouter();
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -22,6 +23,11 @@ const profileImage = computed(() => {
 const updateMemberInfo = () => {
   if (memberInfo.value.password === "") {
     // TODO: sweet alert 추가
+    Swal.fire({
+      icon: 'error',
+      title: '비밀번호 미입력',
+      text: '비밀번호를 입력해주세요.',
+    });
     return;
   }
   const formData = new FormData();
