@@ -78,19 +78,7 @@ const signup = () => {
     formData.append("profileImage", profileImage.value);
   }
 
-  axios.get(`${URL}/auth/checkId`, {
-    params: { id: memberInfo.value.id },
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-      .then(response => {
-        if (response.data.available) {
-          return axios.post(`${URL}/auth/signup`, formData);
-        } else {
-          throw new Error('ID가 이미 사용 중입니다.');
-        }
-      })
+  axios.post(`${URL}/auth/signup`, formData)
       .then(() => {
         Swal.fire({
           icon: 'success',
@@ -98,16 +86,38 @@ const signup = () => {
           text: '회원가입이 성공적으로 완료되었습니다!',
         });
         router.push({ name: 'main' });
-      })
-      .catch(error => {
-        console.error(error);
-        errorMessage.value = error.message || '회원가입 중 오류가 발생했습니다.';
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: errorMessage.value,
-        });
       });
+
+  // axios.get(`${URL}/auth/checkId`, {
+  //   params: { id: memberInfo.value.id },
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   }
+  // })
+  //     .then(response => {
+  //       if (response.data.available) {
+  //         return axios.post(`${URL}/auth/signup`, formData);
+  //       } else {
+  //         throw new Error('ID가 이미 사용 중입니다.');
+  //       }
+  //     })
+  //     .then(() => {
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: '회원가입 성공',
+  //         text: '회원가입이 성공적으로 완료되었습니다!',
+  //       });
+  //       router.push({ name: 'main' });
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //       errorMessage.value = error.message || '회원가입 중 오류가 발생했습니다.';
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'Error',
+  //         text: errorMessage.value,
+  //       });
+  //     });
 }
 const passwordMismatch = computed(() => checkPassword.value !== memberInfo.value.password);
 </script>

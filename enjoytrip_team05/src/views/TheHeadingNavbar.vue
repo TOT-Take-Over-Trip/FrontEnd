@@ -21,6 +21,14 @@ const { userLogout } = memberStore;
 const URL = import.meta.env.VITE_BASE_URL;
 const dropdownOpen = ref(false);
 
+const memberInfo = ref({});
+const profileImage = computed(() => {
+  if (memberInfo.value.profileImage) {
+    return `data:image/jpeg;base64,${(memberInfo.value.profileImage)}`;
+  }
+  return null;
+})
+
 const isDropdownOpen = computed( () => {
   return dropdownOpen.value;
 })
@@ -114,6 +122,14 @@ onMounted(() => {
   if(sessionStorage.getItem("accessToken")) {
     fetchMenuItems();
   }
+  const memberId = sessionStorage.getItem("memberId")
+  console.log("memberID: ", memberId);
+  axios.get(`${URL}/members/${memberId}`)
+      .then((response) => {
+        console.log("mounted response: ", response);
+        memberInfo.value = response.data;
+        console.log(memberInfo.value);
+      })
 });
 
 </script>
@@ -173,8 +189,8 @@ onMounted(() => {
               <MenuButton class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="absolute -inset-1.5" />
                 <span class="sr-only">Open user menu</span>
-                <!-- TODO: 이거 갈아 끼워야 됨 프로필 이미지 -->
-                <img :class="['h-8 w-8 rounded-full', computedNotificationList.length > 0 ? 'border-2 border-red-500' : '']" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                <img v-if="profileImage == null" :class="['h-8 w-8 rounded-full', computedNotificationList.length > 0 ? 'border-2 border-red-500' : '']" src="/src/assets/img/anonymous.png" alt="" />
+                <img v-else :class="['h-8 w-8 rounded-full', computedNotificationList.length > 0 ? 'border-2 border-red-500' : '']" :src="profileImage" alt="" />
               </MenuButton>
             </div>
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
