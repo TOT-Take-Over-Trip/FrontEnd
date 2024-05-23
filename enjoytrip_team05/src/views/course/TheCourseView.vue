@@ -44,7 +44,6 @@ const memberId = sessionStorage.getItem("memberId");
 const fetchCourses = async () => {
   try {
     const response = await axios.get(`${URL}/courses?memberId=${memberId}`);
-    console.log("response: ", response);
     courses.value = response.data.courses;
     topRankCourses.value = response.data.topRankCourses;
   } catch (error) {

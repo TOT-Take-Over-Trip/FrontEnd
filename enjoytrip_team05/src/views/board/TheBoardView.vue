@@ -32,7 +32,6 @@ function searchPosts() {
   } else if (searchCondition.value === '작성자') {
     filteredPosts.value = JSON.parse(JSON.stringify(posts.value)).filter(post => post.memberName.includes(searchContent.value))
   }
-  console.log(filteredPosts);
 }
 
 const topRankPosts = ref([]);

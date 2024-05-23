@@ -44,8 +44,6 @@ const fetchCourses = async () => {
   try {
     const response = await axios.get(`${URL}/courses/mycourse?memberId=${memberId}`);
     courses.value = response.data;
-    console.log("mycourse: ", courses.value);
-    // topRankPosts.value = response.data.topRankPosts;
   } catch (error) {
     console.error("Error fetching courses:", error);
   }

@@ -25,7 +25,6 @@ export const useMenuStore = defineStore("menuStore", () => {
 
             const notificationResponse = await axios.get(`${URL}/notifications?memberId=${memberId}`); //유저 알림 목록 조회
             notificationList.value = notificationResponse.data;
-            console.log(notificationList);
         } catch (error) {
             console.error("Failed to fetch menu items", error);
         }

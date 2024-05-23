@@ -13,9 +13,7 @@ const memberInfo = ref({});
 const fetchItems = async () => {
   try {
     const response = await axios.get(`${URL}/items`);
-    console.log("response: ", response.data);
     items.value = response.data;
-    console.log(items.value);
   } catch (error) {
     console.error("Error fetching items:", error);
   }
