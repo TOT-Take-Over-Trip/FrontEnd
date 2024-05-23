@@ -1,15 +1,15 @@
 <script setup>
 import axios from "axios";
 import { useRoute, useRouter } from 'vue-router';
-import {computed, onMounted, onUpdated, ref, watch} from "vue";
+import {computed, onMounted, ref} from "vue";
 import BoardComment from "@/components/board/BoardComment.vue";
 import {jwtDecode} from "jwt-decode";
 
-const URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const route = useRoute();
 const router = useRouter();
-
+const memberInfo = ref({});
 const post = ref({});
 
 /*
@@ -37,16 +37,23 @@ const submitComment = async () => {
     memberName : loginId,
     content : newComment.value,
   }
-  await axios.post(`${URL}/posts/comments/new`, data)
-  .then(response => {
-    comments.value.push(response.data);
-    newComment.value = "";
-  })
+  await axios.post(`${BASE_URL}/posts/comments/new`, data)
+      .then(response => {
+        comments.value.push(response.data);
+        newComment.value = "";
+      })
 };
+
+const profileImage = computed(() => {
+  if (memberInfo.value.profileImage) {
+    return `data:image/jpeg;base64,${memberInfo.value.profileImage}`;
+  }
+  return null;
+});
 
 // console.log(route.params.postId);
 onMounted(async () => {
-  await axios.get(`${URL}/posts/${route.params.postId}?memberId=${memberId}`)
+  await axios.get(`${BASE_URL}/posts/${route.params.postId}?memberId=${memberId}`)
       .then((response) => {
         console.log(response.data);
         post.value = response.data.postResponseDto;
@@ -59,6 +66,12 @@ onMounted(async () => {
       })
       .catch((error) => {
         console.error("Single Post error: ", error);
+      })
+  await axios.get(`${BASE_URL}/members/${memberId}`)
+      .then((response) => {
+        memberInfo.value = response.data;
+
+        console.log("memberInfo: ", memberInfo.value);
       })
 })
 
@@ -82,14 +95,16 @@ const confirmDelete = () => {
     <div class="mt-14 px-2" style="min-height: 56rem;" v-html="post.content"></div>
     <!-- 댓글 입력 박스 -->
     <div class="bg-gray-200 p-4 rounded-lg flex flex-col mb-4 space-y-2">
+      <div class="flex items-center space-x-4">
+        <img :src="profileImage" class="profile-image"/>
+        <div>{{memberInfo.id}}</div>
+      </div>
       <textarea
           class="flex-grow bg-gray-200 h-24 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="댓글을 입력하세요"
           v-model="newComment"
       ></textarea>
       <div class="flex justify-between items-center">
-        <!-- TODO: 사용자 이름 -->
-        <div></div>
         <button
             class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             @click="submitComment"
@@ -104,5 +119,10 @@ const confirmDelete = () => {
 </template>
 
 <style scoped>
-
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 </style>
