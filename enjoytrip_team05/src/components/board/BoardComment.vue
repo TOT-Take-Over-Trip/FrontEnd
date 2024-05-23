@@ -1,13 +1,25 @@
 <script setup>
-import { onMounted } from 'vue';
+import {computed, onMounted} from 'vue';
 
 const props = defineProps({
   comment: Object,
+  memberInfo: Object,
 });
 
+const profileImage = computed(() => {
+  if (props.memberInfo.profileImage) {
+    return `data:image/jpeg;base64,${props.memberInfo.profileImage}`;
+  }
+  return null;
+});
+
+const deleteComment = () => {
+  
+}
 onMounted(() => {
   const dateSplit = props.comment.createdDate.split(':');
   props.comment.createdDate = dateSplit[0] + ':' + dateSplit[1];
+
 });
 </script>
 
@@ -15,10 +27,9 @@ onMounted(() => {
   <div class="container mx-auto flex border-y-2 py-4">
     <!-- 왼쪽에 프로필 이미지 -->
     <div class="w-1/12 flex justify-center">
-      <!--  TODO: img src 일단 testImg 박아 넣음    -->
       <img
           class="profile-image"
-          src="/src/assets/img/test/testImg.jpeg"
+          :src="profileImage"
           alt="Profile Image"
       />
     </div>
@@ -33,7 +44,7 @@ onMounted(() => {
       <div class="flex">
         <!--   TODO: 이거 버튼으로 처리해야됨   -->
         <div class="me-2 text-sm text-gray-500">수정</div>
-        <div class="me-2 text-sm text-gray-500">삭제</div>
+        <div class="me-2 text-sm text-gray-500" @click="deleteComment">삭제</div>
       </div>
     </div>
   </div>

@@ -76,7 +76,10 @@ onMounted(async () => {
 })
 
 const confirmDelete = () => {
-  console.log("삭제")
+  axios.post(`${BASE_URL}/posts/${post.value.postId}`)
+      .then(() => {
+        router.replace({name: "board"});
+      })
 }
 </script>
 
@@ -113,7 +116,7 @@ const confirmDelete = () => {
         </button>
       </div>
     </div>
-    <BoardComment v-for="(comment) in comments" :comment="comment" />
+    <BoardComment v-for="(comment) in comments" :comment="comment" :memberInfo="memberInfo" />
   </div>
 
 </template>
