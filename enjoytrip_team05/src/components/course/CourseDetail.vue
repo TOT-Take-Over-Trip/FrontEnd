@@ -282,6 +282,9 @@ const takeOver = async () =>{
     await axios.post(`${URL}/courses/takeover/${route.params.courseId}?memberId=${memberId}`).then(
         (response) => {
           router.push({name: 'myCourse'})
+              .then(() => {
+                window.location.reload();
+              });
         })
     console.log("인수 성공!!")
   }

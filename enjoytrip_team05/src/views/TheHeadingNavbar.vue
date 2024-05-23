@@ -149,7 +149,7 @@ onMounted(() => {
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex flex-shrink-0 items-center">
             <RouterLink :to="{name: 'main'}">
-              <img class="h-8 w-auto" src="/src/assets/img/logo.png" alt="logo img" />
+              <img class="h-8 w-auto" src="/src/assets/img/logo_black.png" alt="logo img" />
             </RouterLink>
           </div>
           <div class="hidden sm:ml-6 sm:block">
@@ -201,11 +201,11 @@ onMounted(() => {
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">Settings</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <p :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" @mouseover="showToggleDropdown" @mouseleave="hideToggleDropdown">
+                  <p :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']" @mouseover="showToggleDropdown">
                     알림 <span class="bg-red-500 text-white font-bold rounded-full px-1.5 py-0.5 ml-1">{{computedNotificationList.length}}</span>
                   </p>
                 </MenuItem>
-                <div v-if="isDropdownOpen && computedNotificationList.length > 0" class="dropdown-menu" >
+                <div v-if="isDropdownOpen && computedNotificationList.length > 0" class="dropdown-menu"  @mouseleave="hideToggleDropdown" >
                   <ul>
                     <li v-for="(notification, index) in computedNotificationList" :key="notification.notificationId">
                       <div v-html="'<span>' + (index+1) + '. ' + notification.content + '</span>'"></div>
