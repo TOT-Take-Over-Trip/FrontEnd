@@ -70,14 +70,9 @@ onMounted(() => {
   fetchCourses();
 })
 
-const inputValue = ref('')
 const changeKeyword = (event) =>{
   console.log(event.target.value);
   searchContent.value = event.target.value
-}
-
-const updateHit = (courseId) =>{
-  axios.post(`${URL}/courses/${courseId}/hit`).then("조회수 증가!")
 }
 
 </script>
@@ -128,7 +123,7 @@ const updateHit = (courseId) =>{
     <RouterLink v-for="(course, index) in displayCourses"
                 :key="course.courseId"
                 :to="{ name: 'courseDetail', params: { courseId: course.courseId } }"
-                @click = "updateHit(course.courseId)">
+                >
       <CourseContent :course="course" />
     </RouterLink>
 <!--     전체 게시글 목록 (제목, 날짜, content:글자수로 자름) | 썸네일 END-->
