@@ -76,7 +76,8 @@ const thumbnail = computed(()=>{
         <button @click.stop.prevent="likeCourse(course.courseId)" class="like-button">
           <img :src="isLiked ? likedImageUrl : unlikedImageUrl" alt="Like Button" style="width: 2rem; height: 2rem;" />
         </button>
-        {{likeCount}}
+        {{likeCount}} like
+        | 조회수 {{props.course.hit}}
         <!--   작성 날짜 START  -->
 <!--        <div class="text-xl mt-2 mb-4">{{ course.createdDate }}</div>-->
         <!--   작성 날짜 END  -->
